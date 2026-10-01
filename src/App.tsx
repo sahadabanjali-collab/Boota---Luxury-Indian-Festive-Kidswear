@@ -16,6 +16,7 @@ import { SearchModal } from './components/SearchModal';
 import { AccountModal } from './components/AccountModal';
 import { FloatingChat } from './components/FloatingChat';
 import { CartItem } from './types';
+import { productImages } from './assets/images';
 
 export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([
@@ -27,7 +28,7 @@ export default function App() {
       size: '1-2 Y',
       price: 2899,
       quantity: 1,
-      image: '/src/assets/images/boota_lehenga_front_1790759695046.jpg',
+      image: productImages.front,
     },
   ]);
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -64,7 +65,7 @@ export default function App() {
           size: size,
           price: 2899,
           quantity: 1,
-          image: '/src/assets/images/boota_lehenga_front_1790759695046.jpg',
+          image: productImages.front,
         },
       ]);
     }

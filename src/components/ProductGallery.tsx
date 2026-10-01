@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import { productImages } from '../assets/images';
 
 interface GalleryItem {
   id: string;
@@ -12,28 +13,28 @@ interface GalleryItem {
 const galleryItems: GalleryItem[] = [
   {
     id: 'front',
-    src: '/src/assets/images/boota_lehenga_front_1790759695046.jpg',
+    src: productImages.front,
     bg: '#F9D0D6',
     label: 'Product photo · Front view on model',
     alt: 'Gulnar Silk Lehenga Set - Front view on model',
   },
   {
     id: 'back',
-    src: '/src/assets/images/boota_lehenga_back_1790759709314.jpg',
+    src: productImages.back,
     bg: '#F9D0D6',
     label: 'Product photo · Back view',
     alt: 'Gulnar Silk Lehenga Set - Back view with latkan dori',
   },
   {
     id: 'detail',
-    src: '/src/assets/images/boota_lehenga_detail_1790759719634.jpg',
+    src: productImages.detail,
     bg: '#F9D0D6',
     label: 'Product photo · Close-up of hand-finished details',
     alt: 'Gulnar Silk Lehenga Set - Close-up of hand-finished gota details',
   },
   {
     id: 'flatlay',
-    src: '/src/assets/images/boota_lehenga_flatlay_1790759731593.jpg',
+    src: productImages.flatlay,
     bg: '#F9D0D6',
     label: 'Product photo · Full outfit and accessories',
     alt: 'Gulnar Silk Lehenga Set - Full outfit flat lay with accessories',

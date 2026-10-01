@@ -1,4 +1,5 @@
 import React from 'react';
+import { productImages } from '../assets/images';
 
 interface DetailCard {
   id: string;
@@ -15,7 +16,7 @@ const detailCards: DetailCard[] = [
     bg: '#F9D0D6',
     label: 'Detail photo · Soft cotton lining',
     title: 'Soft cotton lining',
-    imageSrc: '/src/assets/images/boota_lehenga_detail_1790759719634.jpg',
+    imageSrc: productImages.detail,
     alt: 'Soft breathable cotton lining detail',
   },
   {
@@ -23,7 +24,7 @@ const detailCards: DetailCard[] = [
     bg: '#F9D0D6',
     label: 'Detail photo · Hand-finished gota work',
     title: 'Hand-finished gota work',
-    imageSrc: '/src/assets/images/boota_lehenga_flatlay_1790759731593.jpg',
+    imageSrc: productImages.flatlay,
     alt: 'Hand-finished gota work craftsmanship',
   },
   {
@@ -31,7 +32,7 @@ const detailCards: DetailCard[] = [
     bg: '#F9D0D6',
     label: 'Detail photo · Comfort-first fit',
     title: 'Comfort-first fit',
-    imageSrc: '/src/assets/images/boota_lehenga_front_1790759695046.jpg',
+    imageSrc: productImages.front,
     alt: 'Comfort-first festive fit for kids',
   },
 ];

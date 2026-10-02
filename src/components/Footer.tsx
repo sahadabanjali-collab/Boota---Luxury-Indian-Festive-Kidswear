@@ -4,11 +4,25 @@ import { Instagram, Facebook } from 'lucide-react';
 interface FooterProps {
   onOpenSizeGuide?: () => void;
   onOpenAccount: () => void;
+  onNavigatePage?: (page: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenSizeGuide, onOpenAccount }) => {
+export const Footer: React.FC<FooterProps> = ({
+  onOpenSizeGuide,
+  onOpenAccount,
+  onNavigatePage,
+}) => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+
+  const handleLinkClick = (e: React.MouseEvent, page: string) => {
+    e.preventDefault();
+    if (onNavigatePage) {
+      onNavigatePage(page);
+    } else {
+      window.location.hash = page;
+    }
+  };
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,22 +48,32 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSizeGuide, onOpenAccount }
             <ul className="space-y-2.5 text-[14px] text-[#F9D0D6] font-normal leading-[1.6]">
               <li>
                 <a
-                  href="tel:+917291947602"
+                  href="tel:+917291947002"
                   className="hover:text-[#FFFFFF] transition-colors"
                 >
-                  +91 72919 47602
+                  Phone: +91 7291947002
                 </a>
               </li>
               <li>
                 <a
-                  href="mailto:hello@boota.in"
+                  href="mailto:care@bootakids.com"
                   className="hover:text-[#FFFFFF] transition-colors"
                 >
-                  hello@boota.in
+                  Email: care@bootakids.com
                 </a>
               </li>
-              <li className="text-[#F9D0D6]/80">[Registered business address]</li>
-              <li className="text-[#F9D0D6]/80 pt-1">Mon-Sat, 10 am - 7 pm</li>
+              <li>
+                <a
+                  href="https://wa.me/917291947002"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#FFFFFF] transition-colors flex items-center gap-1.5"
+                >
+                  <span>WhatsApp: +91 7291947002</span>
+                </a>
+              </li>
+              <li className="text-[#F9D0D6]/80">Jaipur Atelier &amp; Studio, Rajasthan</li>
+              <li className="text-[#F9D0D6]/80 pt-1">Mon-Sat, 10:00 am - 7:00 pm IST</li>
             </ul>
           </div>
 
@@ -60,24 +84,36 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSizeGuide, onOpenAccount }
             </h4>
             <ul className="space-y-2.5 text-[14px] text-[#F9D0D6] font-normal">
               <li>
-                <a href="#about" className="hover:text-[#FFFFFF] transition-colors">
+                <button
+                  onClick={(e) => handleLinkClick(e, 'about')}
+                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer text-left"
+                >
                   About Us
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#why-boota" className="hover:text-[#FFFFFF] transition-colors">
+                <button
+                  onClick={(e) => handleLinkClick(e, 'why-boota')}
+                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer text-left"
+                >
                   Why Choose Boota?
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#blog" className="hover:text-[#FFFFFF] transition-colors">
+                <button
+                  onClick={(e) => handleLinkClick(e, 'blog')}
+                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer text-left"
+                >
                   Blog
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#gift-card" className="hover:text-[#FFFFFF] transition-colors">
+                <button
+                  onClick={(e) => handleLinkClick(e, 'gift-card')}
+                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer text-left"
+                >
                   Gift Card
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -97,44 +133,52 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSizeGuide, onOpenAccount }
                 </button>
               </li>
               <li>
-                <a href="#track-order" className="hover:text-[#FFFFFF] transition-colors">
-                  Track Order
-                </a>
+                <button
+                  onClick={(e) => handleLinkClick(e, 'returns')}
+                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer text-left"
+                >
+                  Track Order &amp; Logistics
+                </button>
               </li>
               <li>
-                <a href="#return-exchange-req" className="hover:text-[#FFFFFF] transition-colors">
-                  Return / Exchange Request
-                </a>
-              </li>
-              <li>
-                <a href="#return-exchange-policy" className="hover:text-[#FFFFFF] transition-colors">
+                <button
+                  onClick={(e) => handleLinkClick(e, 'returns')}
+                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer text-left"
+                >
                   Return / Exchange Policy
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#shipping-policy" className="hover:text-[#FFFFFF] transition-colors">
-                  Shipping Policy
-                </a>
-              </li>
-              <li>
-                <a href="#faq" className="hover:text-[#FFFFFF] transition-colors">
+                <button
+                  onClick={(e) => handleLinkClick(e, 'faq')}
+                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer text-left"
+                >
                   FAQ
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#size-guide" className="hover:text-[#FFFFFF] transition-colors">
+                <button
+                  onClick={(e) => handleLinkClick(e, 'size-guide')}
+                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer text-left"
+                >
                   Size Guide
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#contact-us" className="hover:text-[#FFFFFF] transition-colors">
+                <button
+                  onClick={(e) => handleLinkClick(e, 'contact')}
+                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer text-left"
+                >
                   Contact Us
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#wholesale" className="hover:text-[#FFFFFF] transition-colors">
+                <button
+                  onClick={(e) => handleLinkClick(e, 'wholesale')}
+                  className="hover:text-[#FFFFFF] transition-colors cursor-pointer text-left"
+                >
                   Wholesale Enquiry
-                </a>
+                </button>
               </li>
             </ul>
           </div>

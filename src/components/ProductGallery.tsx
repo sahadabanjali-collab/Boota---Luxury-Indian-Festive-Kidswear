@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { productImages } from '../assets/images';
+import { Product } from '../types';
 
 interface GalleryItem {
   id: string;
@@ -10,7 +11,11 @@ interface GalleryItem {
   alt: string;
 }
 
-const galleryItems: GalleryItem[] = [
+interface ProductGalleryProps {
+  product?: Product | null;
+}
+
+const defaultGalleryItems: GalleryItem[] = [
   {
     id: 'front',
     src: productImages.front,
@@ -41,14 +46,47 @@ const galleryItems: GalleryItem[] = [
   },
 ];
 
-export const ProductGallery: React.FC = () => {
+export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
   const [activeModalImage, setActiveModalImage] = useState<GalleryItem | null>(null);
+
+  const items = product
+    ? [
+        {
+          id: 'main',
+          src: product.image,
+          bg: '#F9D0D6',
+          label: `${product.name} - Front`,
+          alt: product.name,
+        },
+        {
+          id: 'hover',
+          src: product.hoverImage || productImages.back,
+          bg: '#F9D0D6',
+          label: `${product.name} - Alternate`,
+          alt: `${product.name} Alternate View`,
+        },
+        {
+          id: 'detail',
+          src: productImages.detail,
+          bg: '#F9D0D6',
+          label: 'Handcrafted craft detail',
+          alt: 'Handcrafted craft detail',
+        },
+        {
+          id: 'flatlay',
+          src: productImages.flatlay,
+          bg: '#F9D0D6',
+          label: 'Full ensemble styling',
+          alt: 'Full ensemble flatlay',
+        },
+      ]
+    : defaultGalleryItems;
 
   return (
     <div className="w-full">
       {/* 2x2 Grid with 24px gutters matching design system */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {galleryItems.map((item) => (
+        {items.map((item) => (
           <div
             key={item.id}
             onClick={() => setActiveModalImage(item)}

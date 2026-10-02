@@ -9,6 +9,28 @@ export interface CartItem {
   image: string;
 }
 
+export interface Product {
+  id: string;
+  name: string;
+  collection: 'Boota Desi' | 'Boota Play' | 'Boota Luxe';
+  category: string;
+  price: number;
+  mrp: number;
+  discountPercent?: number;
+  image: string;
+  hoverImage?: string;
+  sizes: string[];
+  color: string;
+  badge?: string;
+  isBestSeller?: boolean;
+  isNewArrival?: boolean;
+  occasions?: string[];
+  ageGroup?: '0-12M' | '1-3Y' | '3Y+';
+  rating: number;
+  reviewCount: number;
+  description: string;
+}
+
 export interface ReviewItem {
   id: string;
   author: string;
@@ -19,4 +41,12 @@ export interface ReviewItem {
   comment: string;
   verified: boolean;
   sizePurchased: string;
+  productName?: string;
+}
+
+export interface AnnouncementMessage {
+  id: string;
+  text: string;
+  active: boolean;
+  type: 'collection' | 'shipping' | 'seasonal';
 }

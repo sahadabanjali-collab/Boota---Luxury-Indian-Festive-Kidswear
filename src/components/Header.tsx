@@ -1,29 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { Search, User, Heart, ShoppingBag, Menu, X, ChevronDown } from 'lucide-react';
+import { Search, User, Heart, ShoppingBag, Menu, X, ChevronDown, RotateCcw } from 'lucide-react';
 import { MegaMenu, NavTab } from './MegaMenu';
+import { bootaLogo } from '../assets/images';
 
 interface HeaderProps {
   cartCount: number;
   wishlistCount: number;
+  currentView?: string;
   onOpenCart: () => void;
   onOpenWishlist: () => void;
   onOpenSearch: () => void;
   onOpenAccount: () => void;
+  onNavigateHome?: () => void;
+  onNavigatePage?: (page: string) => void;
+  onSelectCategory?: (category: string) => void;
 }
 
 const navTabs: NavTab[] = ['GIRL', 'COLLECTION', 'OCCASIONS', 'ACCESSORIES', 'SALE'];
 
+const contentPages = [
+  { id: 'about', label: 'About Us', view: 'about' },
+  { id: 'why-boota', label: 'Why Boota?', view: 'why-boota' },
+  { id: 'blog', label: 'Blog', view: 'blog' },
+  { id: 'gift-card', label: 'Gift Card', view: 'gift-card' },
+  { id: 'size-guide', label: 'Size Guide', view: 'size-guide' },
+  { id: 'contact', label: 'Contact Us', view: 'contact' },
+];
+
 export const Header: React.FC<HeaderProps> = ({
   cartCount,
   wishlistCount,
+  currentView = 'home',
   onOpenCart,
   onOpenWishlist,
   onOpenSearch,
   onOpenAccount,
+  onNavigateHome,
+  onNavigatePage,
+  onSelectCategory,
 }) => {
   const [activeTab, setActiveTab] = useState<NavTab | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openMobileAccordion, setOpenMobileAccordion] = useState<NavTab | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Sticky shrink on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 30) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Prevent background scrolling when mobile menu is open
   useEffect(() => {
@@ -41,16 +73,34 @@ export const Header: React.FC<HeaderProps> = ({
     setOpenMobileAccordion((prev) => (prev === tab ? null : tab));
   };
 
-  const handleItemClick = (e: React.MouseEvent) => {
+  const handleItemClick = (e: React.MouseEvent, category?: string) => {
     e.preventDefault();
     setMobileMenuOpen(false);
+    if (category && onSelectCategory) {
+      onSelectCategory(category);
+    }
+  };
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onNavigateHome) {
+      onNavigateHome();
+    }
   };
 
   return (
-    <header className="relative bg-[#FFFFFF] border-b border-[#E8DADD] sticky top-0 z-30">
-      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px] h-20 flex items-center justify-between">
+    <header
+      className={`relative bg-[#FFFFFF] border-b border-[#E8DADD] sticky top-0 z-30 transition-all duration-300 ease-in-out ${
+        isScrolled ? 'shadow-xs' : ''
+      }`}
+    >
+      <div
+        className={`max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px] flex items-center justify-between transition-all duration-300 ${
+          isScrolled ? 'h-16' : 'h-20'
+        }`}
+      >
         {/* Left: Mobile hamburger & Brand */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 shrink-0 mr-8 lg:mr-12 xl:mr-14">
           <button
             onClick={() => setMobileMenuOpen(true)}
             className="md:hidden p-1.5 text-[#2B2224] hover:text-[#962949] cursor-pointer"
@@ -61,31 +111,96 @@ export const Header: React.FC<HeaderProps> = ({
 
           <a
             href="/"
-            className="font-serif font-semibold text-[32px] sm:text-[38px] tracking-tight text-[#962949] hover:opacity-95 transition-opacity"
+            onClick={handleLogoClick}
+            className="flex items-center hover:opacity-90 transition-opacity pr-1 py-1 shrink-0"
+            aria-label="Boota Homepage"
           >
-            Boota
+            <img
+              src={bootaLogo}
+              alt="Boota"
+              className={`object-contain transition-all duration-300 ${
+                isScrolled ? 'h-10 sm:h-12 w-auto max-h-12' : 'h-12 sm:h-14 w-auto max-h-14'
+              }`}
+              referrerPolicy="no-referrer"
+            />
           </a>
         </div>
 
-        {/* Center: Desktop Navigation (Manrope Medium, 13-14px, letter-spacing 0.04em) */}
-        <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
+        {/* Center: Desktop Navigation (Manrope Medium, 13-14px, letter-spacing 0.03em) */}
+        <nav className="hidden md:flex items-center space-x-3.5 lg:space-x-4 xl:space-x-5 overflow-x-auto scrollbar-none ml-2 lg:ml-4">
+          {/* Home Link */}
+          <div
+            className="relative py-7 shrink-0 pl-1"
+            onMouseEnter={() => setActiveTab(null)}
+          >
+            <button
+              onClick={() => {
+                setActiveTab(null);
+                if (onNavigateHome) {
+                  onNavigateHome();
+                }
+              }}
+              className={`text-[12.5px] lg:text-[13px] font-medium tracking-[0.03em] uppercase transition-colors cursor-pointer whitespace-nowrap ${
+                currentView === 'home' && !activeTab
+                  ? 'text-[#962949] font-semibold'
+                  : 'text-[#2B2224] hover:text-[#962949]'
+              }`}
+            >
+              Home
+            </button>
+            {currentView === 'home' && !activeTab && (
+              <span className="absolute bottom-5 left-0 right-0 h-[2px] bg-[#962949]" />
+            )}
+          </div>
+
           {navTabs.map((tab) => {
             const isActive = activeTab === tab;
             return (
               <div
                 key={tab}
-                className="relative py-7"
+                className="relative py-7 shrink-0"
                 onMouseEnter={() => setActiveTab(tab)}
               >
                 <button
                   onClick={() => setActiveTab(activeTab === tab ? null : tab)}
-                  className={`text-[13.5px] font-medium tracking-[0.04em] uppercase transition-colors cursor-pointer ${
+                  className={`text-[12.5px] lg:text-[13px] font-medium tracking-[0.03em] uppercase transition-colors cursor-pointer whitespace-nowrap ${
                     isActive ? 'text-[#962949]' : 'text-[#2B2224] hover:text-[#962949]'
                   }`}
                 >
                   {tab}
                 </button>
                 {isActive && (
+                  <span className="absolute bottom-5 left-0 right-0 h-[2px] bg-[#962949]" />
+                )}
+              </div>
+            );
+          })}
+
+          {/* Dedicated Content Pages in Navbar */}
+          {contentPages.map((page) => {
+            const isCurrent = currentView === page.view && !activeTab;
+            return (
+              <div
+                key={page.id}
+                className="relative py-7 shrink-0"
+                onMouseEnter={() => setActiveTab(null)}
+              >
+                <button
+                  onClick={() => {
+                    setActiveTab(null);
+                    if (onNavigatePage) {
+                      onNavigatePage(page.view);
+                    }
+                  }}
+                  className={`text-[12.5px] lg:text-[13px] font-medium tracking-[0.03em] uppercase transition-colors cursor-pointer whitespace-nowrap ${
+                    isCurrent
+                      ? 'text-[#962949] font-semibold'
+                      : 'text-[#2B2224] hover:text-[#962949]'
+                  }`}
+                >
+                  {page.label}
+                </button>
+                {isCurrent && (
                   <span className="absolute bottom-5 left-0 right-0 h-[2px] bg-[#962949]" />
                 )}
               </div>
@@ -154,10 +269,20 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="h-16 px-6 flex items-center justify-between border-b border-[#E8DADD] shrink-0 bg-[#FFFFFF]">
             <a
               href="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="font-serif font-semibold text-[32px] tracking-tight text-[#962949]"
+              onClick={(e) => {
+                e.preventDefault();
+                setMobileMenuOpen(false);
+                if (onNavigateHome) onNavigateHome();
+              }}
+              className="flex items-center py-1"
+              aria-label="Boota Homepage"
             >
-              Boota
+              <img
+                src={bootaLogo}
+                alt="Boota"
+                className="h-10 w-auto object-contain max-h-10"
+                referrerPolicy="no-referrer"
+              />
             </a>
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -170,6 +295,30 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Accordion Categories */}
           <div className="divide-y divide-[#E8DADD] border-b border-[#E8DADD]">
+            {/* Home Item */}
+            <div className="w-full">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onNavigateHome) {
+                    onNavigateHome();
+                  }
+                }}
+                className={`w-full py-4 px-6 flex items-center justify-between text-left cursor-pointer transition-colors ${
+                  currentView === 'home'
+                    ? 'text-[#962949] font-semibold bg-[#FFF9FA]'
+                    : 'text-[#000000] hover:text-[#962949]'
+                }`}
+              >
+                <span className="text-[14.5px] font-medium tracking-[0.05em] uppercase">
+                  Home
+                </span>
+                {currentView === 'home' && (
+                  <span className="w-2 h-2 rounded-full bg-[#962949]" />
+                )}
+              </button>
+            </div>
+
             {navTabs.map((tab) => {
               const isOpen = openMobileAccordion === tab;
               const isSale = tab === 'SALE';
@@ -373,7 +522,18 @@ export const Header: React.FC<HeaderProps> = ({
               className="flex items-center gap-3 w-full text-left hover:text-[#962949] transition-colors cursor-pointer"
             >
               <User className="w-[19px] h-[19px] stroke-[1.8] text-[#2B2224]" />
-              <span className="font-medium">My Account</span>
+              <span className="font-medium">My Account &amp; Orders</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                if (onNavigatePage) onNavigatePage('returns');
+              }}
+              className="flex items-center gap-3 w-full text-left text-[#962949] font-medium transition-colors cursor-pointer"
+            >
+              <RotateCcw className="w-[19px] h-[19px] stroke-[1.8] text-[#962949]" />
+              <span>Track, Return or Exchange</span>
             </button>
 
             <button
@@ -387,20 +547,71 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="font-medium">Wishlist</span>
             </button>
 
-            <a
-              href="#track-order"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block hover:text-[#962949] transition-colors py-0.5 font-medium"
-            >
-              Track Order
-            </a>
-
-            <a
-              href="tel:+917291947002"
-              className="block hover:text-[#962949] transition-colors py-0.5 text-[#2B2224] font-medium"
-            >
-              Contact Us · +91 72919 47002
-            </a>
+            <div className="pt-2 border-t border-[#E8DADD]/60 space-y-2 text-[14px]">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onNavigatePage) onNavigatePage('about');
+                }}
+                className="block text-left w-full hover:text-[#962949] transition-colors py-0.5 font-medium cursor-pointer"
+              >
+                About Boota
+              </button>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onNavigatePage) onNavigatePage('why-boota');
+                }}
+                className="block text-left w-full hover:text-[#962949] transition-colors py-0.5 font-medium cursor-pointer"
+              >
+                Why Choose Boota?
+              </button>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onNavigatePage) onNavigatePage('blog');
+                }}
+                className="block text-left w-full hover:text-[#962949] transition-colors py-0.5 font-medium cursor-pointer"
+              >
+                Blog &amp; Festive Guides
+              </button>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onNavigatePage) onNavigatePage('gift-card');
+                }}
+                className="block text-left w-full hover:text-[#962949] transition-colors py-0.5 font-medium cursor-pointer"
+              >
+                Gift Cards
+              </button>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onNavigatePage) onNavigatePage('size-guide');
+                }}
+                className="block text-left w-full hover:text-[#962949] transition-colors py-0.5 font-medium cursor-pointer"
+              >
+                Size Guide
+              </button>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onNavigatePage) onNavigatePage('faq');
+                }}
+                className="block text-left w-full hover:text-[#962949] transition-colors py-0.5 font-medium cursor-pointer"
+              >
+                FAQ &amp; Help
+              </button>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onNavigatePage) onNavigatePage('contact');
+                }}
+                className="block text-left w-full hover:text-[#962949] transition-colors py-0.5 font-medium cursor-pointer text-[#962949]"
+              >
+                Contact Concierge · +91 7291947002
+              </button>
+            </div>
           </div>
         </div>
       )}

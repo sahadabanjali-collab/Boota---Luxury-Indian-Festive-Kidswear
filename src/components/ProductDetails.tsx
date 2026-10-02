@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Star, Truck, ChevronDown, ChevronUp, Heart } from 'lucide-react';
 
+import { Product } from '../types';
+
 interface ProductDetailsProps {
+  product?: Product | null;
   onAddToBag: (size: string, color: string) => void;
   onToggleWishlist: () => void;
   isWishlisted: boolean;
@@ -9,7 +12,7 @@ interface ProductDetailsProps {
   onOpenReviews: () => void;
 }
 
-const sizes = ['1-2 Y', '2-3 Y', '3-4 Y', '4-5 Y', '5-6 Y'];
+const defaultSizes = ['1-2 Y', '2-3 Y', '3-4 Y', '4-5 Y', '5-6 Y'];
 
 interface ColorOption {
   name: string;
@@ -22,14 +25,16 @@ const colors: ColorOption[] = [
 ];
 
 export const ProductDetails: React.FC<ProductDetailsProps> = ({
+  product,
   onAddToBag,
   onToggleWishlist,
   isWishlisted,
   onOpenSizeGuide,
   onOpenReviews,
 }) => {
+  const currentSizes = product?.sizes && product.sizes.length > 0 ? product.sizes : defaultSizes;
   const [selectedColor, setSelectedColor] = useState<ColorOption>(colors[0]);
-  const [selectedSize, setSelectedSize] = useState<string>('1-2 Y');
+  const [selectedSize, setSelectedSize] = useState<string>(currentSizes[0] || '1-2 Y');
   const [openAccordions, setOpenAccordions] = useState<{ [key: string]: boolean }>({
     productDetails: true,
     fabricCare: false,
@@ -47,16 +52,20 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
     onAddToBag(selectedSize, selectedColor.name);
   };
 
+  const productName = product ? product.name : 'Gulnar Silk Lehenga Set';
+  const productCollection = product ? product.collection : 'Boota Luxe';
+  const productPrice = product ? product.price : 2899;
+
   return (
     <div className="w-full flex flex-col justify-start">
       {/* Category / Subtitle */}
       <span className="text-[13px] font-sans uppercase tracking-[0.06em] text-[#6F6265] font-medium">
-        Boota Luxe
+        {productCollection}
       </span>
 
-      {/* H1 Heading: Cormorant Garamond Semibold (48-56px desktop, 34-40px mobile, line-height 1.1) */}
+      {/* H1 Heading: Cormorant Garamond Semibold */}
       <h1 className="text-h1 mt-1.5 mb-2">
-        Gulnar Silk Lehenga Set
+        {productName}
       </h1>
 
       {/* Rating & Reviews */}
@@ -70,14 +79,14 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
           onClick={onOpenReviews}
           className="text-[13.5px] text-[#6F6265] hover:text-[#962949] transition-colors underline cursor-pointer"
         >
-          4.9 · 18 reviews
+          {product ? `${product.rating} · ${product.reviewCount} reviews` : '4.9 · 18 reviews'}
         </button>
       </div>
 
       {/* Price: Manrope Semibold */}
       <div className="mt-4">
         <div className="text-[26px] font-semibold text-[#962949] tracking-tight">
-          ₹2,899
+          ₹{productPrice.toLocaleString('en-IN')}
         </div>
         <div className="text-[13px] text-[#6F6265] mt-0.5">Inclusive of all taxes</div>
       </div>
@@ -121,6 +130,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
           </span>
           <button
             type="button"
+            onClick={onOpenSizeGuide}
             className="text-[#6F6265] hover:text-[#962949] underline transition-colors cursor-pointer text-[13px] font-medium"
           >
             SIZE GUIDE
@@ -129,7 +139,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
 
         {/* Size Buttons Row: border-radius 4px, Manrope Semibold */}
         <div className="grid grid-cols-5 gap-2">
-          {sizes.map((s) => {
+          {currentSizes.map((s) => {
             const isSelected = selectedSize === s;
             return (
               <button

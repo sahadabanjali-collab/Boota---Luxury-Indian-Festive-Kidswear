@@ -35,59 +35,46 @@ export const ShopByCollection: React.FC<ShopByCollectionProps> = ({ onSelectColl
   ];
 
   return (
-    <section className="w-full py-16 md:py-24 bg-[#FFFFFF] border-b border-[#E8DADD]">
+    <section className="w-full py-5 md:py-8 lg:py-10 bg-[#FFFFFF]">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px]">
         {/* Section Heading */}
-        <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-          <span className="text-[12px] uppercase font-semibold tracking-[0.14em] text-[#962949] block mb-2">
+        <div className="text-center max-w-2xl mx-auto mb-6 md:mb-8">
+          <span className="text-[12px] uppercase font-semibold tracking-[0.14em] text-[#962949] block mb-1.5">
             Curated Universes
           </span>
-          <h2 className="font-serif text-[30px] md:text-[38px] text-[#2B2224] font-medium tracking-tight mb-3">
+          <h2 className="font-serif text-[28px] md:text-[34px] text-[#2B2224] font-medium tracking-tight mb-2">
             Shop by Collection
           </h2>
-          <p className="text-[14px] md:text-[15px] text-[#6F6265] leading-relaxed">
+          <p className="text-[13.5px] md:text-[14.5px] text-[#6F6265] leading-relaxed">
             From playful everyday festivities to regal wedding heirloom sets, explore Boota’s signature craftsmanship.
           </p>
         </div>
 
-        {/* 3 Large Editorial Tiles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        {/* 3 Smaller Images (about 180–220px wide), Three in a Row, Centred */}
+        <div className="max-w-[680px] mx-auto grid grid-cols-3 gap-3 sm:gap-5 justify-center">
           {collections.map((col) => (
             <div
               key={col.id}
               onClick={() => onSelectCollection && onSelectCollection(col.name)}
-              className="group relative cursor-pointer overflow-hidden rounded-[4px] border border-[#E8DADD] bg-[#FAF6F4] flex flex-col transition-all duration-300 hover:shadow-lg hover:border-[#962949]/40"
+              className="group relative cursor-pointer overflow-hidden rounded-[6px] border border-[#E8DADD]/80 bg-[#FAF6F4] transition-all duration-300 hover:shadow-md hover:border-[#962949]/40 flex flex-col"
             >
-              {/* Editorial Image */}
-              <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#F9D0D6]/20">
+              {/* Image Frame */}
+              <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#FAF6F4]">
                 <img
                   src={col.image}
                   alt={`Boota ${col.name} collection`}
                   className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#2B2224]/80 via-[#2B2224]/20 to-transparent transition-opacity duration-300 group-hover:opacity-90" />
 
-                <div className="absolute top-4 left-4 px-2.5 py-1 bg-white/90 text-[#962949] text-[11px] font-semibold uppercase tracking-[0.08em] rounded-[2px] backdrop-blur-xs">
-                  {col.badge}
-                </div>
-              </div>
-
-              {/* Text Information */}
-              <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end text-white">
-                <div className="text-[12px] uppercase tracking-[0.1em] text-[#F9D0D6] font-semibold mb-1">
-                  {col.tagline}
-                </div>
-                <h3 className="font-serif text-[28px] md:text-[32px] font-medium text-white mb-2 group-hover:text-[#F9D0D6] transition-colors">
-                  {col.name}
-                </h3>
-                <p className="text-[13px] text-white/85 leading-relaxed mb-4 line-clamp-2 font-light">
-                  {col.description}
-                </p>
-
-                <div className="inline-flex items-center text-[12.5px] font-semibold uppercase tracking-[0.06em] text-white group-hover:text-[#F9D0D6] transition-colors">
-                  <span>Explore Collection</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5 transition-transform duration-200 group-hover:translate-x-1" />
+                {/* Light ivory/white shade only on the lower portion of the image behind the name */}
+                <div className="absolute inset-x-0 bottom-0 pt-8 sm:pt-10 pb-2.5 sm:pb-3.5 px-2 sm:px-3 bg-gradient-to-t from-[#FFFDF9]/95 via-[#FFFDF9]/80 to-transparent flex flex-col items-center justify-end text-center transition-all duration-300">
+                  <h3 className="font-serif font-bold text-[15px] sm:text-[18px] md:text-[20px] text-[#962949] tracking-tight leading-tight m-0 group-hover:scale-[1.02] transition-transform">
+                    {col.name}
+                  </h3>
+                  <span className="text-[10px] sm:text-[11.5px] font-medium text-[#6F6265] tracking-wide mt-0.5 line-clamp-1">
+                    {col.badge}
+                  </span>
                 </div>
               </div>
             </div>

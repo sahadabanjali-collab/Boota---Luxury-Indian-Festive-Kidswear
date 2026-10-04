@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Search, User, Heart, ShoppingBag, Menu, X, ChevronDown, RotateCcw } from 'lucide-react';
+import { Search, Heart, Menu, X, ChevronDown, RotateCcw } from 'lucide-react';
 import { MegaMenu, NavTab } from './MegaMenu';
-import { bootaLogo } from '../assets/images';
+import { bootaLogo, cartIconImg } from '../assets/images';
 
 interface HeaderProps {
   cartCount: number;
@@ -17,15 +17,6 @@ interface HeaderProps {
 }
 
 const navTabs: NavTab[] = ['GIRL', 'COLLECTION', 'OCCASIONS', 'ACCESSORIES', 'SALE'];
-
-const contentPages = [
-  { id: 'about', label: 'About Us', view: 'about' },
-  { id: 'why-boota', label: 'Why Boota?', view: 'why-boota' },
-  { id: 'blog', label: 'Blog', view: 'blog' },
-  { id: 'gift-card', label: 'Gift Card', view: 'gift-card' },
-  { id: 'size-guide', label: 'Size Guide', view: 'size-guide' },
-  { id: 'contact', label: 'Contact Us', view: 'contact' },
-];
 
 export const Header: React.FC<HeaderProps> = ({
   cartCount,
@@ -83,6 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    setActiveTab(null);
     if (onNavigateHome) {
       onNavigateHome();
     }
@@ -112,7 +104,7 @@ export const Header: React.FC<HeaderProps> = ({
           <a
             href="/"
             onClick={handleLogoClick}
-            className="flex items-center hover:opacity-90 transition-opacity pr-1 py-1 shrink-0"
+            className="flex items-center hover:opacity-90 transition-opacity pr-1 py-1 shrink-0 cursor-pointer"
             aria-label="Boota Homepage"
           >
             <img
@@ -126,33 +118,8 @@ export const Header: React.FC<HeaderProps> = ({
           </a>
         </div>
 
-        {/* Center: Desktop Navigation (Manrope Medium, 13-14px, letter-spacing 0.03em) */}
-        <nav className="hidden md:flex items-center space-x-3.5 lg:space-x-4 xl:space-x-5 overflow-x-auto scrollbar-none ml-2 lg:ml-4">
-          {/* Home Link */}
-          <div
-            className="relative py-7 shrink-0 pl-1"
-            onMouseEnter={() => setActiveTab(null)}
-          >
-            <button
-              onClick={() => {
-                setActiveTab(null);
-                if (onNavigateHome) {
-                  onNavigateHome();
-                }
-              }}
-              className={`text-[12.5px] lg:text-[13px] font-medium tracking-[0.03em] uppercase transition-colors cursor-pointer whitespace-nowrap ${
-                currentView === 'home' && !activeTab
-                  ? 'text-[#962949] font-semibold'
-                  : 'text-[#2B2224] hover:text-[#962949]'
-              }`}
-            >
-              Home
-            </button>
-            {currentView === 'home' && !activeTab && (
-              <span className="absolute bottom-5 left-0 right-0 h-[2px] bg-[#962949]" />
-            )}
-          </div>
-
+        {/* Center: Desktop Navigation - Exactly 5 items: GIRL · COLLECTION · OCCASIONS · ACCESSORIES · SALE */}
+        <nav className="hidden md:flex items-center space-x-6 lg:space-x-8 xl:space-x-10 ml-8 lg:ml-12 xl:ml-16">
           {navTabs.map((tab) => {
             const isActive = activeTab === tab;
             return (
@@ -163,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <button
                   onClick={() => setActiveTab(activeTab === tab ? null : tab)}
-                  className={`text-[12.5px] lg:text-[13px] font-medium tracking-[0.03em] uppercase transition-colors cursor-pointer whitespace-nowrap ${
+                  className={`text-[12.5px] lg:text-[13px] font-medium tracking-[0.04em] uppercase transition-colors cursor-pointer whitespace-nowrap ${
                     isActive ? 'text-[#962949]' : 'text-[#2B2224] hover:text-[#962949]'
                   }`}
                 >
@@ -175,41 +142,10 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             );
           })}
-
-          {/* Dedicated Content Pages in Navbar */}
-          {contentPages.map((page) => {
-            const isCurrent = currentView === page.view && !activeTab;
-            return (
-              <div
-                key={page.id}
-                className="relative py-7 shrink-0"
-                onMouseEnter={() => setActiveTab(null)}
-              >
-                <button
-                  onClick={() => {
-                    setActiveTab(null);
-                    if (onNavigatePage) {
-                      onNavigatePage(page.view);
-                    }
-                  }}
-                  className={`text-[12.5px] lg:text-[13px] font-medium tracking-[0.03em] uppercase transition-colors cursor-pointer whitespace-nowrap ${
-                    isCurrent
-                      ? 'text-[#962949] font-semibold'
-                      : 'text-[#2B2224] hover:text-[#962949]'
-                  }`}
-                >
-                  {page.label}
-                </button>
-                {isCurrent && (
-                  <span className="absolute bottom-5 left-0 right-0 h-[2px] bg-[#962949]" />
-                )}
-              </div>
-            );
-          })}
         </nav>
 
-        {/* Right: Actions */}
-        <div className="flex items-center space-x-4 sm:space-x-5 text-[#2B2224]">
+        {/* Right: Actions - Moved to the far right, aligned with page content edge */}
+        <div className="ml-auto flex items-center space-x-3.5 sm:space-x-4 lg:space-x-5 text-[#2B2224] shrink-0 justify-end -mr-1.5 sm:mr-0">
           {/* Search */}
           <button
             onClick={onOpenSearch}
@@ -219,14 +155,13 @@ export const Header: React.FC<HeaderProps> = ({
             <Search className="w-[18px] h-[18px] stroke-[1.8]" />
           </button>
 
-          {/* Account */}
+          {/* Account - Text only, no person icon, strictly on one line */}
           <button
             onClick={onOpenAccount}
-            className="flex items-center gap-1.5 text-[13.5px] font-medium tracking-[0.04em] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer p-1.5 rounded-[4px]"
+            className="text-[12.5px] lg:text-[13px] font-medium tracking-[0.03em] uppercase text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer whitespace-nowrap shrink-0 py-1.5 px-1"
             aria-label="My Account"
           >
-            <User className="w-[18px] h-[18px] stroke-[1.8]" />
-            <span className="hidden sm:inline-block">My Account</span>
+            <span className="whitespace-nowrap inline-block">My Account</span>
           </button>
 
           {/* Wishlist */}
@@ -237,21 +172,25 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <Heart className="w-[18px] h-[18px] stroke-[1.8]" />
             {wishlistCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 w-4 h-4 bg-[#962949] text-[#FFFFFF] text-[10px] font-semibold rounded-[4px] flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 bg-[#962949] text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none shadow-xs">
                 {wishlistCount}
               </span>
             )}
           </button>
 
-          {/* Cart */}
+          {/* Cart / Shopping Bag Button */}
           <button
             onClick={onOpenCart}
-            className="relative p-1.5 hover:text-[#962949] transition-colors cursor-pointer rounded-[4px]"
+            className="relative p-1.5 hover:opacity-75 transition-opacity cursor-pointer rounded-[4px] flex items-center justify-center"
             aria-label="Shopping Bag"
           >
-            <ShoppingBag className="w-[18px] h-[18px] stroke-[1.8]" />
-            {cartCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 w-4 h-4 bg-[#962949] text-[#FFFFFF] text-[10px] font-semibold rounded-[4px] flex items-center justify-center">
+            <img
+              src={cartIconImg}
+              alt="Shopping Bag"
+              className="w-[19px] h-[19px] object-contain mix-blend-multiply"
+            />
+            {cartCount !== undefined && (
+              <span className="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 bg-[#962949] text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none shadow-xs">
                 {cartCount}
               </span>
             )}
@@ -260,7 +199,11 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Desktop Mega Menu Dropdown */}
-      <MegaMenu activeTab={activeTab} onClose={() => setActiveTab(null)} />
+      <MegaMenu
+        activeTab={activeTab}
+        onClose={() => setActiveTab(null)}
+        onSelectCategory={onSelectCategory}
+      />
 
       {/* Mobile Drawer (matching "new navbar.jpg" exactly) */}
       {mobileMenuOpen && (
@@ -519,10 +462,9 @@ export const Header: React.FC<HeaderProps> = ({
                 setMobileMenuOpen(false);
                 onOpenAccount();
               }}
-              className="flex items-center gap-3 w-full text-left hover:text-[#962949] transition-colors cursor-pointer"
+              className="block w-full text-left hover:text-[#962949] transition-colors cursor-pointer py-1"
             >
-              <User className="w-[19px] h-[19px] stroke-[1.8] text-[#2B2224]" />
-              <span className="font-medium">My Account &amp; Orders</span>
+              <span className="font-medium whitespace-nowrap text-[15px] inline-block">My Account</span>
             </button>
 
             <button

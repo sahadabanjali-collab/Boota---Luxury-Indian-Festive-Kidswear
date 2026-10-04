@@ -34,10 +34,10 @@ export const CustomerReviews: React.FC<CustomerReviewsProps> = ({
   };
 
   return (
-    <section className="w-full py-16 md:py-24 bg-[#FAF6F4] border-b border-[#E8DADD] overflow-hidden">
+    <section className="w-full py-5 md:py-8 lg:py-10 bg-[#FAF6F4] overflow-hidden">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px]">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 md:mb-8 gap-4">
           <div>
             <span className="text-[12px] uppercase font-semibold tracking-[0.14em] text-[#962949] block mb-2">
               From Families Who Celebrate With Us

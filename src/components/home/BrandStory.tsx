@@ -8,7 +8,7 @@ interface BrandStoryProps {
 
 export const BrandStory: React.FC<BrandStoryProps> = ({ onOpenStory }) => {
   return (
-    <section className="w-full py-16 md:py-24 bg-[#FAF6F4] border-b border-[#E8DADD] overflow-hidden">
+    <section className="w-full py-5 md:py-8 lg:py-10 bg-[#FAF6F4] overflow-hidden">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           {/* Genuine Workshop/Artisan Editorial Image (7 Cols on desktop) */}

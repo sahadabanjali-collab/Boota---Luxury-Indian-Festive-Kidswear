@@ -26,7 +26,7 @@ export const WhyBoota: React.FC = () => {
   ];
 
   return (
-    <section className="w-full py-12 md:py-16 bg-[#FFFFFF] border-b border-[#E8DADD]">
+    <section className="w-full py-5 md:py-8 lg:py-10 bg-[#FFFFFF]">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px]">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-[#E8DADD]">
           {trustPoints.map((item, index) => {

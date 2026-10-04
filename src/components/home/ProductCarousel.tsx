@@ -38,10 +38,10 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
   };
 
   return (
-    <section className="w-full py-16 md:py-20 bg-[#FAF6F4]/50 border-b border-[#E8DADD] overflow-hidden">
+    <section className="w-full py-5 md:py-8 lg:py-10 bg-[#FAF6F4]/50 overflow-hidden">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px]">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-10 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-5 md:mb-7 gap-4">
           <div>
             {badgeText && (
               <span className="text-[12px] uppercase font-semibold tracking-[0.14em] text-[#962949] block mb-2">

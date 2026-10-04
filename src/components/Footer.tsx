@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Instagram, Facebook } from 'lucide-react';
+import { bootaLogoWhite } from '../assets/images';
 
 interface FooterProps {
   onOpenSizeGuide?: () => void;
@@ -36,16 +37,35 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   return (
-    <footer className="w-full bg-[#962949] text-[#FFFFFF] pt-16 pb-12">
+    <footer className="w-full bg-[#962949] text-[#FFFFFF] pt-14 pb-12">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px]">
+        {/* Brand Header with White Logo */}
+        <div className="pb-10 mb-10 border-b border-[#FFFFFF]/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <a
+            href="/"
+            onClick={(e) => handleLinkClick(e, 'home')}
+            className="flex items-center hover:opacity-90 transition-opacity cursor-pointer"
+            aria-label="Boota Homepage"
+          >
+            <img
+              src={bootaLogoWhite}
+              alt="Boota"
+              className="h-12 sm:h-14 w-auto object-contain"
+            />
+          </a>
+          <p className="text-[13.5px] text-[#F9D0D6]/90 max-w-sm font-light leading-relaxed">
+            Handcrafted festive kidswear rooted in Jaipur&apos;s royal heritage. Tailored with care for celebration and playtime.
+          </p>
+        </div>
+
         {/* Main Footer 4 Columns with 24px gutters */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 pb-14 border-b border-[#FFFFFF]/20">
           {/* Col 1: Contact */}
           <div>
-            <h4 className="font-serif font-semibold text-[22px] mb-4 text-[#FFFFFF]">
+            <h4 className="font-serif font-bold text-[24px] mb-5 text-[#FFFFFF]">
               Contact
             </h4>
-            <ul className="space-y-2.5 text-[14px] text-[#F9D0D6] font-normal leading-[1.6]">
+            <ul className="space-y-3.5 text-[16px] text-[#F9D0D6] font-normal leading-[1.7]">
               <li>
                 <a
                   href="tel:+917291947002"
@@ -72,17 +92,17 @@ export const Footer: React.FC<FooterProps> = ({
                   <span>WhatsApp: +91 7291947002</span>
                 </a>
               </li>
-              <li className="text-[#F9D0D6]/80">Jaipur Atelier &amp; Studio, Rajasthan</li>
-              <li className="text-[#F9D0D6]/80 pt-1">Mon-Sat, 10:00 am - 7:00 pm IST</li>
+              <li className="text-[#F9D0D6]/85">Jaipur Atelier &amp; Studio, Rajasthan</li>
+              <li className="text-[#F9D0D6]/85 pt-0.5">Mon-Sat, 10:00 am - 7:00 pm IST</li>
             </ul>
           </div>
 
           {/* Col 2: Know Us */}
           <div>
-            <h4 className="font-serif font-semibold text-[22px] mb-4 text-[#FFFFFF]">
+            <h4 className="font-serif font-bold text-[24px] mb-5 text-[#FFFFFF]">
               Know Us
             </h4>
-            <ul className="space-y-2.5 text-[14px] text-[#F9D0D6] font-normal">
+            <ul className="space-y-3.5 text-[16px] text-[#F9D0D6] font-normal leading-[1.7]">
               <li>
                 <button
                   onClick={(e) => handleLinkClick(e, 'about')}
@@ -120,10 +140,10 @@ export const Footer: React.FC<FooterProps> = ({
 
           {/* Col 3: Help */}
           <div>
-            <h4 className="font-serif font-semibold text-[22px] mb-4 text-[#FFFFFF]">
+            <h4 className="font-serif font-bold text-[24px] mb-5 text-[#FFFFFF]">
               Help
             </h4>
-            <ul className="space-y-2.5 text-[14px] text-[#F9D0D6] font-normal">
+            <ul className="space-y-3.5 text-[16px] text-[#F9D0D6] font-normal leading-[1.7]">
               <li>
                 <button
                   onClick={onOpenAccount}
@@ -185,7 +205,7 @@ export const Footer: React.FC<FooterProps> = ({
 
           {/* Col 4: Subscribe & Social */}
           <div>
-            <h4 className="font-serif font-semibold text-[22px] mb-4 text-[#FFFFFF]">
+            <h4 className="font-serif font-bold text-[24px] mb-5 text-[#FFFFFF]">
               Subscribe to our email
             </h4>
 

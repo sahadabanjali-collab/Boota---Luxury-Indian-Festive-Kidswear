@@ -15,7 +15,7 @@ export const NewsletterSection: React.FC = () => {
   };
 
   return (
-    <section className="w-full py-16 md:py-24 bg-[#F9D0D6]/25 border-b border-[#E8DADD]">
+    <section className="w-full py-8 md:py-12 lg:py-14 bg-[#F9D0D6]/25">
       <div className="max-w-[760px] mx-auto px-4 md:px-8 text-center">
         <span className="text-[12px] uppercase font-semibold tracking-[0.14em] text-[#962949] block mb-2">
           Exclusive Previews & Festive Curations

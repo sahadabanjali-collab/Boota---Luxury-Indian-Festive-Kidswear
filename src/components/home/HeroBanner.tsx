@@ -128,7 +128,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onSelectCategory }) => {
                           e.stopPropagation();
                           handleSlideClick(slide.category);
                         }}
-                        className="inline-flex items-center justify-center px-7 py-3.5 bg-white text-[#962949] hover:bg-[#F9D0D6] hover:text-[#962949] text-[13px] font-semibold tracking-[0.06em] uppercase rounded-[4px] shadow-sm transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer"
+                        className="inline-flex items-center justify-center px-7 py-3.5 bg-[#962949] text-white hover:bg-[#7D213C] text-[13px] font-semibold tracking-[0.06em] uppercase rounded-[4px] shadow-md transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer"
                       >
                         {slide.cta}
                       </button>

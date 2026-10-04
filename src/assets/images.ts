@@ -19,15 +19,17 @@ import ageKids from './images/age_kids_boota_1790871004337.jpg';
 // Brand Story
 import brandStory from './images/brand_story_boota_1790871016915.jpg';
 
-// Brand Logo
-import bootaLogo from './images/WhatsApp Image 2026-09-27 at 1.04.27 PM (1).jpeg';
+// Brand Logo & Cart Icon
+import bootaLogo from './images/boota_logo_maroon.png';
+import bootaLogoWhite from './images/boota_logo_white.png';
+import cartIconImg from './images/cart icon.jpg';
 
 // Products
 import productSharara from './images/product_sharara_1790871036019.jpg';
 import productBandhani from './images/product_bandhani_1790871056729.jpg';
 import productPattu from './images/product_pattu_1790871069515.jpg';
 
-export { bootaLogo };
+export { bootaLogo, bootaLogoWhite, cartIconImg };
 
 export const productImages = {
   front: bootaFront,

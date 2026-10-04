@@ -37,10 +37,10 @@ export const InstagramSection: React.FC = () => {
   ];
 
   return (
-    <section className="w-full py-16 md:py-24 bg-[#FFFFFF] border-b border-[#E8DADD]">
+    <section className="w-full py-5 md:py-8 lg:py-10 bg-[#FFFFFF]">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px]">
         {/* Header */}
-        <div className="text-center max-w-xl mx-auto mb-10 md:mb-14">
+        <div className="text-center max-w-xl mx-auto mb-6 md:mb-8">
           <span className="text-[12px] uppercase font-semibold tracking-[0.14em] text-[#962949] block mb-2">
             Social Community
           </span>

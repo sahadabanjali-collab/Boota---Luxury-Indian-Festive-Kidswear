@@ -60,15 +60,13 @@ export const TheDetailsSection: React.FC = () => {
           {detailCards.map((card) => (
             <div key={card.id} className="flex flex-col group cursor-pointer">
               {/* Photo Box with Soft Blush background, Soft Border, 4px border radius */}
-              <div
-                className="relative w-full aspect-[4/3] overflow-hidden flex items-end p-4 border border-[#E8DADD] rounded-[4px] bg-[#F9D0D6]"
-              >
+              <div className="relative w-full aspect-[4/3] overflow-hidden flex items-end p-4 border border-[#E8DADD] rounded-[6px] bg-[#FAF6F4]">
                 {card.imageSrc && (
                   <img
                     src={card.imageSrc}
                     alt={card.alt}
                     referrerPolicy="no-referrer"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => {
                       (e.currentTarget as HTMLElement).style.display = 'none';
                     }}
@@ -76,14 +74,7 @@ export const TheDetailsSection: React.FC = () => {
                 )}
 
                 {/* Subtle scrim */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#2B2224]/30 via-transparent to-transparent pointer-events-none" />
-
-                {/* Label at bottom-left */}
-                <div className="relative z-10 bg-[#FFFFFF] border border-[#E8DADD] px-2.5 py-1 rounded-[4px]">
-                  <span className="text-[12px] font-sans text-[#6F6265] font-medium tracking-wide">
-                    {card.label}
-                  </span>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#2B2224]/20 via-transparent to-transparent pointer-events-none" />
               </div>
 
               {/* Title below card: Cormorant Garamond Semibold (text-h3) */}

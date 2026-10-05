@@ -37,19 +37,27 @@ export const HomePage: React.FC<HomePageProps> = ({
   const newArrivals = allProducts.filter((p) => p.isNewArrival).slice(0, 10);
 
   const handleCategoryNav = (cat: string) => {
-    if (onFilterChange) onFilterChange('category', cat);
+    const match = allProducts.find(
+      (p) =>
+        p.category.toLowerCase().includes(cat.toLowerCase()) ||
+        p.collection.toLowerCase().includes(cat.toLowerCase())
+    ) || allProducts[0];
+    onSelectProduct(match);
   };
 
   const handleAgeNav = (age: string) => {
-    if (onFilterChange) onFilterChange('age', age);
+    const match = allProducts.find((p) => p.ageGroup === age) || allProducts[0];
+    onSelectProduct(match);
   };
 
   const handleCollectionNav = (col: string) => {
-    if (onFilterChange) onFilterChange('collection', col);
+    const match = allProducts.find((p) => p.collection.toLowerCase().includes(col.toLowerCase())) || allProducts[0];
+    onSelectProduct(match);
   };
 
   const handleOccasionNav = (occ: string) => {
-    if (onFilterChange) onFilterChange('occasion', occ);
+    const match = allProducts.find((p) => p.occasions?.some((o) => o.toLowerCase().includes(occ.toLowerCase()))) || allProducts[0];
+    onSelectProduct(match);
   };
 
   return (

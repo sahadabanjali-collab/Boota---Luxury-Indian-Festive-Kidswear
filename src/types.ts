@@ -19,6 +19,8 @@ export interface Product {
   discountPercent?: number;
   image: string;
   hoverImage?: string;
+  galleryImages?: string[];
+  pairedProductIds?: string[];
   sizes: string[];
   color: string;
   badge?: string;
@@ -29,6 +31,9 @@ export interface Product {
   rating: number;
   reviewCount: number;
   description: string;
+  packageContains?: string;
+  fabricDetails?: string;
+  careInstructions?: string;
 }
 
 export interface ReviewItem {

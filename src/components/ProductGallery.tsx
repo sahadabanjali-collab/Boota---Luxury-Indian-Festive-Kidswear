@@ -1,148 +1,231 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
-import { productImages } from '../assets/images';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 import { Product } from '../types';
-
-interface GalleryItem {
-  id: string;
-  src: string;
-  bg: string;
-  label: string;
-  alt: string;
-}
+import { getProductGalleryImages } from '../data/products';
 
 interface ProductGalleryProps {
   product?: Product | null;
 }
 
-const defaultGalleryItems: GalleryItem[] = [
-  {
-    id: 'front',
-    src: productImages.front,
-    bg: '#F9D0D6',
-    label: 'Product photo · Front view on model',
-    alt: 'Gulnar Silk Lehenga Set - Front view on model',
-  },
-  {
-    id: 'back',
-    src: productImages.back,
-    bg: '#F9D0D6',
-    label: 'Product photo · Back view',
-    alt: 'Gulnar Silk Lehenga Set - Back view with latkan dori',
-  },
-  {
-    id: 'detail',
-    src: productImages.detail,
-    bg: '#F9D0D6',
-    label: 'Product photo · Close-up of hand-finished details',
-    alt: 'Gulnar Silk Lehenga Set - Close-up of hand-finished gota details',
-  },
-  {
-    id: 'flatlay',
-    src: productImages.flatlay,
-    bg: '#F9D0D6',
-    label: 'Product photo · Full outfit and accessories',
-    alt: 'Gulnar Silk Lehenga Set - Full outfit flat lay with accessories',
-  },
-];
+interface ZoomState {
+  isHovering: boolean;
+  x: number;
+  y: number;
+}
 
 export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
-  const [activeModalImage, setActiveModalImage] = useState<GalleryItem | null>(null);
+  const images = getProductGalleryImages(product);
 
-  const items = product
-    ? [
-        {
-          id: 'main',
-          src: product.image,
-          bg: '#F9D0D6',
-          label: `${product.name} - Front`,
-          alt: product.name,
-        },
-        {
-          id: 'hover',
-          src: product.hoverImage || productImages.back,
-          bg: '#F9D0D6',
-          label: `${product.name} - Alternate`,
-          alt: `${product.name} Alternate View`,
-        },
-        {
-          id: 'detail',
-          src: productImages.detail,
-          bg: '#F9D0D6',
-          label: 'Handcrafted craft detail',
-          alt: 'Handcrafted craft detail',
-        },
-        {
-          id: 'flatlay',
-          src: productImages.flatlay,
-          bg: '#F9D0D6',
-          label: 'Full ensemble styling',
-          alt: 'Full ensemble flatlay',
-        },
-      ]
-    : defaultGalleryItems;
+  // Lightbox Modal state
+  const [modalIndex, setModalIndex] = useState<number | null>(null);
+  const [modalZoomed, setModalZoomed] = useState(false);
+
+  // Track hover zoom per image index
+  const [hoverStates, setHoverStates] = useState<{ [index: number]: ZoomState }>({});
+  const cardRefs = useRef<{ [index: number]: HTMLDivElement | null }>({});
+
+  const handleMouseMove = (index: number, e: React.MouseEvent<HTMLDivElement>) => {
+    const el = cardRefs.current[index];
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+    const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+    setHoverStates((prev) => ({
+      ...prev,
+      [index]: { isHovering: true, x, y },
+    }));
+  };
+
+  const handleMouseEnter = (index: number) => {
+    setHoverStates((prev) => ({
+      ...prev,
+      [index]: { isHovering: true, x: 50, y: 50 },
+    }));
+  };
+
+  const handleMouseLeave = (index: number) => {
+    setHoverStates((prev) => ({
+      ...prev,
+      [index]: { isHovering: false, x: 50, y: 50 },
+    }));
+  };
+
+  // Keyboard navigation for Lightbox
+  const handleNextModal = useCallback(() => {
+    if (modalIndex === null) return;
+    setModalIndex((prev) => ((prev ?? 0) + 1) % images.length);
+    setModalZoomed(false);
+  }, [modalIndex, images.length]);
+
+  const handlePrevModal = useCallback(() => {
+    if (modalIndex === null) return;
+    setModalIndex((prev) => ((prev ?? 0) - 1 + images.length) % images.length);
+    setModalZoomed(false);
+  }, [modalIndex, images.length]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (modalIndex === null) return;
+      if (e.key === 'Escape') setModalIndex(null);
+      if (e.key === 'ArrowRight') handleNextModal();
+      if (e.key === 'ArrowLeft') handlePrevModal();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [modalIndex, handleNextModal, handlePrevModal]);
 
   return (
     <div className="w-full">
-      {/* 2x2 Grid with 24px gutters matching design system */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => setActiveModalImage(item)}
-            className="group relative aspect-[4/5] overflow-hidden cursor-pointer border border-[#E8DADD] rounded-[4px] bg-[#F9D0D6]"
-          >
-            {/* Image */}
-            <img
-              src={item.src}
-              alt={item.alt}
-              referrerPolicy="no-referrer"
-              className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-102"
-              onError={(e) => {
-                (e.currentTarget as HTMLElement).style.display = 'none';
-              }}
-            />
+      {/* 2-Column Responsive Grid with minimum 6 images, clean without text labels */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-5">
+        {images.map((src, index) => {
+          const hover = hoverStates[index] || { isHovering: false, x: 50, y: 50 };
 
-            {/* Bottom-left label matching exact Figma design */}
-            <div className="absolute bottom-3 left-3 z-10 pointer-events-none bg-[#FFFFFF] border border-[#E8DADD] px-2.5 py-1 rounded-[4px]">
-              <span className="text-[12px] font-sans text-[#6F6265] font-medium tracking-wide">
-                {item.label}
-              </span>
+          return (
+            <div
+              key={index}
+              ref={(el) => {
+                cardRefs.current[index] = el;
+              }}
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseMove={(e) => handleMouseMove(index, e)}
+              onMouseLeave={() => handleMouseLeave(index)}
+              onClick={() => {
+                setModalIndex(index);
+                setModalZoomed(false);
+              }}
+              className="relative aspect-[4/5] overflow-hidden rounded-[6px] border border-[#E8DADD] bg-[#FAF6F4] cursor-zoom-in shadow-2xs transition-all duration-200 select-none group"
+              title="Click to view large with zoom"
+            >
+              <img
+                src={src}
+                alt={`${product?.name || 'Product photo'} - view ${index + 1}`}
+                referrerPolicy="no-referrer"
+                style={{
+                  transformOrigin: `${hover.x}% ${hover.y}%`,
+                  transform: hover.isHovering ? 'scale(2.2)' : 'scale(1)',
+                }}
+                className="w-full h-full object-cover object-center transition-transform duration-200 ease-out will-change-transform pointer-events-none"
+                loading={index < 2 ? 'eager' : 'lazy'}
+              />
+
+              {/* Hover Zoom Hint badge (top right, non-intrusive) */}
+              <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white/90 backdrop-blur-xs text-[#962949] p-1.5 rounded-full shadow-xs pointer-events-none">
+                <ZoomIn className="w-4 h-4" />
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Lightbox / Zoom Modal */}
-      {activeModalImage && (
+      {/* Lightbox / Large View Modal with Zoom & Prev/Next Arrows */}
+      {modalIndex !== null && (
         <div
           role="dialog"
           aria-modal="true"
-          onClick={() => setActiveModalImage(null)}
-          className="fixed inset-0 z-50 bg-[#2B2224]/80 flex items-center justify-center p-4 backdrop-blur-xs"
+          onClick={() => setModalIndex(null)}
+          className="fixed inset-0 z-50 bg-[#2B2224]/85 backdrop-blur-sm flex flex-col items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
         >
+          {/* Top Controls Header */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-4xl max-h-[90vh] bg-[#FFFFFF] border border-[#E8DADD] rounded-[4px] overflow-hidden"
+            className="w-full max-w-5xl flex items-center justify-between text-white pb-3 px-2 z-20"
           >
-            <button
-              onClick={() => setActiveModalImage(null)}
-              className="absolute top-4 right-4 z-20 p-2 bg-[#FFFFFF] hover:bg-[#F9D0D6] border border-[#E8DADD] rounded-[4px] text-[#2B2224] cursor-pointer transition-colors"
-              aria-label="Close modal"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <img
-              src={activeModalImage.src}
-              alt={activeModalImage.alt}
-              className="max-h-[80vh] w-auto object-contain mx-auto"
-            />
-            <div className="p-4 bg-[#FFFFFF] border-t border-[#E8DADD] flex items-center justify-between text-[13px] text-[#6F6265]">
-              <span className="font-serif font-semibold text-[18px] text-[#962949]">
-                Gulnar Silk Lehenga Set
+            <div className="flex items-center space-x-3">
+              <span className="font-serif font-bold text-[18px] sm:text-[20px] text-white tracking-wide">
+                {product?.name || 'Gulnar Silk Lehenga Set'}
               </span>
-              <span>{activeModalImage.label}</span>
+              <span className="text-white/70 text-[13px] bg-white/15 px-2.5 py-0.5 rounded-full">
+                {modalIndex + 1} / {images.length}
+              </span>
             </div>
+
+            <div className="flex items-center space-x-2">
+              <button
+                type="button"
+                onClick={() => setModalZoomed((prev) => !prev)}
+                className="p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+                title={modalZoomed ? 'Zoom Out' : 'Zoom In'}
+                aria-label="Toggle Zoom"
+              >
+                {modalZoomed ? <ZoomOut className="w-5 h-5" /> : <ZoomIn className="w-5 h-5" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => setModalIndex(null)}
+                className="p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+                title="Close (Esc)"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Main Large Image Container */}
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative max-w-5xl w-full flex-1 max-h-[80vh] flex items-center justify-center overflow-hidden"
+          >
+            {/* Prev Arrow */}
+            <button
+              type="button"
+              onClick={handlePrevModal}
+              className="absolute left-2 sm:left-4 z-20 w-11 h-11 rounded-full bg-white/80 hover:bg-white text-[#2B2224] shadow-md flex items-center justify-center transition-all transform hover:scale-105 cursor-pointer"
+              aria-label="Previous photo"
+            >
+              <ChevronLeft className="w-6 h-6 stroke-[2]" />
+            </button>
+
+            {/* Next Arrow */}
+            <button
+              type="button"
+              onClick={handleNextModal}
+              className="absolute right-2 sm:right-4 z-20 w-11 h-11 rounded-full bg-white/80 hover:bg-white text-[#2B2224] shadow-md flex items-center justify-center transition-all transform hover:scale-105 cursor-pointer"
+              aria-label="Next photo"
+            >
+              <ChevronRight className="w-6 h-6 stroke-[2]" />
+            </button>
+
+            {/* Large Image with optional modal zoom */}
+            <div className="w-full h-full flex items-center justify-center overflow-auto p-2">
+              <img
+                src={images[modalIndex]}
+                alt={`${product?.name || 'Product'} view ${modalIndex + 1}`}
+                className={`max-h-[76vh] w-auto max-w-full object-contain rounded-[4px] transition-transform duration-300 ${
+                  modalZoomed ? 'scale-150 cursor-grab active:cursor-grabbing' : 'cursor-zoom-in'
+                }`}
+                onClick={() => setModalZoomed((prev) => !prev)}
+              />
+            </div>
+          </div>
+
+          {/* Bottom Thumbnails Strip */}
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-2xl flex items-center justify-center space-x-2 pt-3 z-20 overflow-x-auto py-1"
+          >
+            {images.map((thumb, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => {
+                  setModalIndex(idx);
+                  setModalZoomed(false);
+                }}
+                className={`w-14 h-16 rounded-[4px] overflow-hidden border-2 transition-all cursor-pointer shrink-0 ${
+                  idx === modalIndex
+                    ? 'border-white scale-105 shadow-md'
+                    : 'border-white/30 opacity-60 hover:opacity-90'
+                }`}
+              >
+                <img
+                  src={thumb}
+                  alt={`Thumbnail ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            ))}
           </div>
         </div>
       )}

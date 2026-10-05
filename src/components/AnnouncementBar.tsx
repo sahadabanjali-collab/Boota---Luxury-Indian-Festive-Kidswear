@@ -76,17 +76,8 @@ export const AnnouncementBar: React.FC<AnnouncementBarProps> = ({
             </span>
           </div>
 
-          {/* Discreet Admin Edit Trigger */}
-          <div className="w-6 flex justify-end">
-            <button
-              onClick={() => setAdminModalOpen(true)}
-              className="text-[#962949]/40 hover:text-[#962949] transition-colors p-1 cursor-pointer"
-              title="Admin: Edit Announcement Messages"
-              aria-label="Edit Announcement Messages"
-            >
-              <Settings className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          {/* Right Spacer to keep text perfectly centered */}
+          <div className="w-6 hidden md:block" />
         </div>
       </div>
 

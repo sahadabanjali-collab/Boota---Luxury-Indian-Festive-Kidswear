@@ -1,6 +1,21 @@
 import React, { useState } from 'react';
-import { Star, Truck, ChevronDown, ChevronUp, Heart } from 'lucide-react';
-
+import {
+  Star,
+  Truck,
+  RotateCcw,
+  Heart,
+  ChevronDown,
+  ChevronUp,
+  Tag,
+  Gift,
+  CheckCircle2,
+  ShieldCheck,
+  Feather,
+  Sparkles,
+  Smile,
+  Copy,
+  Check,
+} from 'lucide-react';
 import { Product } from '../types';
 
 interface ProductDetailsProps {
@@ -10,9 +25,20 @@ interface ProductDetailsProps {
   isWishlisted: boolean;
   onOpenSizeGuide?: () => void;
   onOpenReviews: () => void;
+  onOpenReturnsPolicy?: () => void;
+  returnDays?: number;
 }
 
-const defaultSizes = ['1-2 Y', '2-3 Y', '3-4 Y', '4-5 Y', '5-6 Y'];
+const defaultSizes = [
+  '0M (3-5.2 KG)',
+  '3M',
+  '6M',
+  '1Y',
+  '2Y',
+  '3Y',
+  '4Y',
+  '5-6Y',
+];
 
 interface ColorOption {
   name: string;
@@ -31,14 +57,39 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
   isWishlisted,
   onOpenSizeGuide,
   onOpenReviews,
+  onOpenReturnsPolicy,
+  returnDays = 7,
 }) => {
-  const currentSizes = product?.sizes && product.sizes.length > 0 ? product.sizes : defaultSizes;
+  const currentSizes =
+    product?.sizes && product.sizes.length > 0 ? product.sizes : defaultSizes;
   const [selectedColor, setSelectedColor] = useState<ColorOption>(colors[0]);
-  const [selectedSize, setSelectedSize] = useState<string>(currentSizes[0] || '1-2 Y');
-  const [openAccordions, setOpenAccordions] = useState<{ [key: string]: boolean }>({
+  const [selectedSize, setSelectedSize] = useState<string>(
+    currentSizes[0] || '1-2 Y'
+  );
+
+  // Offers state
+  const [copiedCoupon, setCopiedCoupon] = useState(false);
+  const [giftWrap, setGiftWrap] = useState(false);
+
+  // Pincode Delivery Check state
+  const [pincode, setPincode] = useState('');
+  const [pincodeStatus, setPincodeStatus] = useState<{
+    checked: boolean;
+    valid: boolean;
+    code: string;
+    deliveryDate: string;
+    codAvailable: boolean;
+    message: string;
+  } | null>(null);
+
+  // Collapsible Accordions
+  const [openAccordions, setOpenAccordions] = useState<{
+    [key: string]: boolean;
+  }>({
     productDetails: true,
-    fabricCare: false,
-    shippingExchange: false,
+    shippingReturns: false,
+    intlShipping: false,
+    supplierInfo: false,
   });
 
   const toggleAccordion = (key: string) => {
@@ -52,24 +103,72 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
     onAddToBag(selectedSize, selectedColor.name);
   };
 
+  const handleCopyCode = (code: string) => {
+    navigator.clipboard?.writeText(code);
+    setCopiedCoupon(true);
+    setTimeout(() => setCopiedCoupon(false), 2500);
+  };
+
+  // Pincode calculation logic
+  const handleCheckPincode = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanPin = pincode.trim();
+    if (!cleanPin || cleanPin.length !== 6 || isNaN(Number(cleanPin))) {
+      setPincodeStatus({
+        checked: true,
+        valid: false,
+        code: cleanPin,
+        deliveryDate: '',
+        codAvailable: false,
+        message: 'Please enter a valid 6-digit Indian pincode.',
+      });
+      return;
+    }
+
+    // Calculate delivery date 3-5 days from now
+    const now = new Date();
+    const minDays = 3;
+    const maxDays = 5;
+    const minDate = new Date(now.getTime() + minDays * 24 * 60 * 60 * 1000);
+    const maxDate = new Date(now.getTime() + maxDays * 24 * 60 * 60 * 1000);
+
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    };
+    const formattedRange = `${minDate.toLocaleDateString(
+      'en-IN',
+      options
+    )} – ${maxDate.toLocaleDateString('en-IN', options)}`;
+
+    // Set successful result
+    setPincodeStatus({
+      checked: true,
+      valid: true,
+      code: cleanPin,
+      deliveryDate: formattedRange,
+      codAvailable: true,
+      message: 'Delivery available to this location.',
+    });
+  };
+
   const productName = product ? product.name : 'Gulnar Silk Lehenga Set';
-  const productCollection = product ? product.collection : 'Boota Luxe';
   const productPrice = product ? product.price : 2899;
+  const productMrp = product?.mrp || Math.round(productPrice * 1.2);
+  const discountPercent =
+    product?.discountPercent ||
+    Math.round(((productMrp - productPrice) / productMrp) * 100);
 
   return (
     <div className="w-full flex flex-col justify-start">
-      {/* Category / Subtitle */}
-      <span className="text-[13px] font-sans uppercase tracking-[0.06em] text-[#6F6265] font-medium">
-        {productCollection}
-      </span>
-
-      {/* H1 Heading: Cormorant Garamond Semibold */}
-      <h1 className="text-h1 mt-1.5 mb-2">
+      {/* Product Name: Cormorant Garamond Bold */}
+      <h1 className="font-serif font-bold text-[28px] sm:text-[34px] md:text-[38px] text-[#2B2224] leading-[1.15] tracking-normal mb-2">
         {productName}
       </h1>
 
-      {/* Rating & Reviews */}
-      <div className="flex items-center gap-2 mt-1">
+      {/* Ratings / Reviews bar */}
+      <div className="flex items-center gap-2 mb-3">
         <div className="flex items-center text-amber-500">
           {[...Array(5)].map((_, i) => (
             <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
@@ -77,78 +176,75 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
         </div>
         <button
           onClick={onOpenReviews}
-          className="text-[13.5px] text-[#6F6265] hover:text-[#962949] transition-colors underline cursor-pointer"
+          className="text-[13px] text-[#6F6265] hover:text-[#962949] transition-colors underline cursor-pointer"
         >
-          {product ? `${product.rating} · ${product.reviewCount} reviews` : '4.9 · 18 reviews'}
+          {product
+            ? `${product.rating} · (${product.reviewCount} customer reviews)`
+            : '5.0 · (42 customer reviews)'}
         </button>
       </div>
 
-      {/* Price: Manrope Semibold */}
-      <div className="mt-4">
-        <div className="text-[26px] font-semibold text-[#962949] tracking-tight">
+      {/* Price: MRP, Current Price, Struck-through MRP, % Off */}
+      <div className="flex flex-wrap items-baseline gap-2.5 mb-1">
+        <span className="text-[14px] uppercase font-bold text-[#6F6265]">
+          MRP
+        </span>
+        <span className="font-sans font-bold text-[26px] sm:text-[30px] text-[#962949] tracking-tight">
           ₹{productPrice.toLocaleString('en-IN')}
-        </div>
-        <div className="text-[13px] text-[#6F6265] mt-0.5">Inclusive of all taxes</div>
-      </div>
-
-      <div className="my-6 border-t border-[#E8DADD]" />
-
-      {/* Colour Selector */}
-      <div>
-        <div className="flex items-center justify-between text-[13.5px] mb-2.5">
-          <span className="uppercase tracking-[0.06em] font-semibold text-[#2B2224]">
-            COLOUR
+        </span>
+        {productMrp > productPrice && (
+          <span className="text-[16px] text-[#6F6265] line-through decoration-[#6F6265]/70 font-medium">
+            ₹{productMrp.toLocaleString('en-IN')}
           </span>
-          <span className="text-[#6F6265] font-medium">{selectedColor.name}</span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {colors.map((c) => {
-            const isSelected = selectedColor.name === c.name;
-            return (
-              <button
-                key={c.name}
-                onClick={() => setSelectedColor(c)}
-                aria-label={`Select color ${c.name}`}
-                className={`relative w-8 h-8 rounded-full transition-all cursor-pointer ${
-                  isSelected
-                    ? 'ring-2 ring-offset-2 ring-[#962949] scale-105'
-                    : 'hover:opacity-90'
-                }`}
-                style={{ backgroundColor: c.hex }}
-              />
-            );
-          })}
-        </div>
+        )}
+        {discountPercent > 0 && (
+          <span className="text-[14px] font-bold text-[#2E6B4F] tracking-wide">
+            ({discountPercent}% OFF)
+          </span>
+        )}
       </div>
 
-      {/* Size Selector */}
-      <div className="mt-6">
-        <div className="flex items-center justify-between text-[13.5px] mb-2.5">
-          <span className="uppercase tracking-[0.06em] font-semibold text-[#2B2224]">
-            SELECT SIZE
+      {/* "Inclusive of all taxes" */}
+      <div className="text-[12.5px] text-[#6F6265] font-normal mb-3">
+        Inclusive of all taxes
+      </div>
+
+      {/* Stock status: READY TO SHIP */}
+      <div className="mb-6">
+        <span className="inline-flex items-center px-3 py-1 rounded-[4px] bg-[#EBF7EE] text-[#2E6B4F] text-[12px] font-bold uppercase tracking-[0.06em]">
+          <span className="w-2 h-2 rounded-full bg-[#2E6B4F] mr-1.5 animate-pulse" />
+          READY TO SHIP
+        </span>
+      </div>
+
+      {/* Size Selector with Size Guide Link */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between text-[13px] mb-2.5">
+          <span className="font-bold text-[#2B2224] uppercase tracking-[0.06em]">
+            SIZE
           </span>
           <button
             type="button"
             onClick={onOpenSizeGuide}
-            className="text-[#6F6265] hover:text-[#962949] underline transition-colors cursor-pointer text-[13px] font-medium"
+            className="text-[#962949] hover:underline font-semibold text-[13px] uppercase tracking-[0.04em] cursor-pointer"
           >
             SIZE GUIDE
           </button>
         </div>
 
-        {/* Size Buttons Row: border-radius 4px, Manrope Semibold */}
-        <div className="grid grid-cols-5 gap-2">
+        {/* Size Buttons Row: border-radius 4px, clean buttons */}
+        <div className="grid grid-cols-4 sm:grid-cols-4 gap-2">
           {currentSizes.map((s) => {
             const isSelected = selectedSize === s;
             return (
               <button
                 key={s}
+                type="button"
                 onClick={() => setSelectedSize(s)}
-                className={`py-2.5 text-[13px] font-semibold rounded-[4px] border text-center transition-all cursor-pointer ${
+                className={`py-2.5 px-2 text-[12.5px] font-semibold rounded-[4px] border text-center transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-[#962949] text-[#FFFFFF] border-[#962949]'
-                    : 'bg-[#FFFFFF] text-[#2B2224] border-[#E8DADD] hover:bg-[#962949] hover:text-[#FFFFFF] hover:border-[#962949]'
+                    ? 'bg-[#962949] text-white border-[#962949] shadow-xs'
+                    : 'bg-white text-[#2B2224] border-[#E8DADD] hover:border-[#962949] hover:text-[#962949]'
                 }`}
               >
                 {s}
@@ -156,29 +252,26 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
             );
           })}
         </div>
-
-        {/* Size guidance note: Manrope Regular 13px, Muted Taupe */}
-        <p className="text-[13px] text-[#6F6265] mt-2.5 leading-relaxed">
-          Fits true to age. If she is between sizes, choose the next size up.
-        </p>
       </div>
 
-      {/* Action Buttons: Add to Bag + Wishlist (Manrope Semibold, 13-14px, letter-spacing 0.06em) */}
-      <div className="flex items-center gap-3 mt-6">
+      {/* Action Buttons: Add to Bag and Wishlist SIDE BY SIDE */}
+      <div className="flex items-center gap-3 mb-6">
         <button
+          type="button"
           onClick={handleAdd}
-          className="flex-1 bg-[#962949] hover:bg-[#7A1F3B] text-[#FFFFFF] py-3.5 px-6 text-[13.5px] uppercase font-semibold tracking-[0.06em] rounded-[4px] transition-colors cursor-pointer"
+          className="flex-1 bg-[#962949] hover:bg-[#7D213C] text-white py-3.5 px-6 text-[14px] uppercase font-bold tracking-[0.06em] rounded-[4px] shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer text-center"
         >
-          ADD TO BAG
+          Add to Bag
         </button>
 
         <button
+          type="button"
           onClick={onToggleWishlist}
-          aria-label="Add to Wishlist"
-          className={`flex items-center justify-center gap-2 px-5 py-3.5 border rounded-[4px] text-[13px] font-semibold uppercase tracking-[0.06em] transition-colors cursor-pointer ${
+          aria-label={isWishlisted ? 'Saved to Wishlist' : 'Save to Wishlist'}
+          className={`flex items-center justify-center gap-2 px-5 py-3.5 border rounded-[4px] text-[13px] font-semibold uppercase tracking-[0.05em] transition-all cursor-pointer shrink-0 ${
             isWishlisted
-              ? 'border-[#962949] text-[#962949] bg-[#F9D0D6]'
-              : 'border-[#E8DADD] text-[#2B2224] hover:border-[#962949] hover:text-[#962949]'
+              ? 'border-[#962949] text-[#962949] bg-[#F9D0D6]/40'
+              : 'border-[#E8DADD] text-[#2B2224] hover:border-[#962949] hover:text-[#962949] bg-white'
           }`}
         >
           <Heart
@@ -187,29 +280,168 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
             }`}
           />
           <span className="whitespace-nowrap">
-            {isWishlisted ? 'Wishlisted' : 'Add to Wishlist'}
+            {isWishlisted ? 'Wishlisted' : 'Save to Wishlist'}
           </span>
         </button>
       </div>
 
-      {/* Delivery details badge: Soft Blush accent background, Soft Border */}
-      <div className="flex items-start gap-3 mt-8 p-4 bg-[#F9D0D6]/35 border border-[#E8DADD] rounded-[4px]">
-        <Truck className="w-5 h-5 text-[#962949] shrink-0 mt-0.5" />
-        <div className="text-[13px]">
-          <div className="font-semibold text-[#2B2224]">Delivery in 3-7 days</div>
-          <div className="text-[#6F6265] mt-0.5">Free prepaid shipping above ₹1,499</div>
+      {/* Exciting Offers Box */}
+      <div className="border border-[#E8DADD] rounded-[6px] p-4 bg-[#FFFDF9] mb-4">
+        <div className="flex items-center space-x-2 text-[12px] font-bold uppercase tracking-[0.08em] text-[#2B2224] mb-2">
+          <Tag className="w-3.5 h-3.5 text-[#962949]" />
+          <span>Exciting Offers</span>
+        </div>
+        <div className="flex items-center justify-between text-[13px] text-[#2B2224]">
+          <div className="flex items-center gap-1.5">
+            <span className="font-bold text-[#962949]">BOOTANEW10</span>
+            <span className="text-[#6F6265]">– First time buyers, get 10% Off</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => handleCopyCode('BOOTANEW10')}
+            className="text-[11.5px] font-semibold uppercase tracking-[0.05em] text-[#962949] hover:underline flex items-center gap-1 cursor-pointer bg-[#F9D0D6]/40 px-2 py-1 rounded-[2px]"
+          >
+            {copiedCoupon ? (
+              <>
+                <Check className="w-3 h-3 text-[#2E6B4F]" />
+                <span className="text-[#2E6B4F]">Copied</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-3 h-3" />
+                <span>Copy Code</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Accordions */}
-      <div className="mt-8 border-t border-[#E8DADD] divide-y divide-[#E8DADD]">
-        {/* Accordion 1: PRODUCT DETAILS */}
+      {/* Gift Wrap Available Option */}
+      <div className="flex items-center space-x-2.5 mb-5 text-[13px] text-[#2B2224]">
+        <label className="flex items-center space-x-2 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={giftWrap}
+            onChange={(e) => setGiftWrap(e.target.checked)}
+            className="w-4 h-4 rounded-[2px] text-[#962949] accent-[#962949] border-[#E8DADD] focus:ring-[#962949]"
+          />
+          <Gift className="w-4 h-4 text-[#962949]" />
+          <span>Gift wrap available (+₹50 for celebratory box &amp; note)</span>
+        </label>
+      </div>
+
+      {/* 4 Trust Badges Strip (matching reference) */}
+      <div className="grid grid-cols-4 gap-2 text-center py-3.5 px-2 border-y border-[#E8DADD] mb-6">
+        <div className="flex flex-col items-center">
+          <ShieldCheck className="w-5 h-5 text-[#962949] mb-1" />
+          <span className="text-[11px] font-medium text-[#2B2224] leading-tight">
+            Global Standards
+          </span>
+          <span className="text-[10px] text-[#6F6265]">Construction</span>
+        </div>
+        <div className="flex flex-col items-center">
+          <Sparkles className="w-5 h-5 text-[#962949] mb-1" />
+          <span className="text-[11px] font-medium text-[#2B2224] leading-tight">
+            Exclusive
+          </span>
+          <span className="text-[10px] text-[#6F6265]">Design</span>
+        </div>
+        <div className="flex flex-col items-center">
+          <Smile className="w-5 h-5 text-[#962949] mb-1" />
+          <span className="text-[11px] font-medium text-[#2B2224] leading-tight">
+            Jhanjhat Ready
+          </span>
+          <span className="text-[10px] text-[#6F6265]">Easy Movement</span>
+        </div>
+        <div className="flex flex-col items-center">
+          <Feather className="w-5 h-5 text-[#962949] mb-1" />
+          <span className="text-[11px] font-medium text-[#2B2224] leading-tight">
+            No Pokey
+          </span>
+          <span className="text-[10px] text-[#6F6265]">Mulmul Lining</span>
+        </div>
+      </div>
+
+      {/* Pincode & Delivery Section */}
+      <div className="p-4 bg-[#FAF6F4] border border-[#E8DADD] rounded-[6px] mb-5">
+        <div className="flex items-center space-x-2 text-[14px] font-bold text-[#2B2224] mb-2">
+          <Truck className="w-4 h-4 text-[#962949]" />
+          <span>Delivery in 3–7 days</span>
+        </div>
+        <p className="text-[12.5px] text-[#6F6265] mb-3">
+          Enter your delivery pincode to check instant estimated dispatch &amp; Cash on Delivery availability.
+        </p>
+
+        {/* Pincode box with "Check" button directly below */}
+        <form onSubmit={handleCheckPincode} className="flex gap-2">
+          <input
+            type="text"
+            maxLength={6}
+            value={pincode}
+            onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
+            placeholder="Enter 6-digit Pincode (e.g. 110001)"
+            className="flex-1 bg-white border border-[#E8DADD] rounded-[4px] px-3.5 py-2 text-[13.5px] text-[#2B2224] placeholder-[#6F6265]/60 focus:outline-none focus:border-[#962949]"
+          />
+          <button
+            type="submit"
+            className="px-5 py-2 bg-[#962949] hover:bg-[#7D213C] text-white text-[13px] font-bold uppercase tracking-[0.04em] rounded-[4px] transition-colors cursor-pointer shrink-0"
+          >
+            Check
+          </button>
+        </form>
+
+        {/* Pincode Result: Expected Delivery Date & COD Availability */}
+        {pincodeStatus && pincodeStatus.checked && (
+          <div className="mt-3.5 pt-3 border-t border-[#E8DADD]/80 text-[13px]">
+            {pincodeStatus.valid ? (
+              <div className="space-y-1.5 text-[#2B2224]">
+                <div className="flex items-center space-x-1.5 text-[#2E6B4F] font-semibold">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>Delivery available for {pincodeStatus.code}</span>
+                </div>
+                <div className="text-[13px] pl-5">
+                  Expected Delivery: <strong className="text-[#2B2224] font-bold">{pincodeStatus.deliveryDate}</strong>
+                </div>
+                <div className="text-[12.5px] pl-5 text-[#2E6B4F] font-medium">
+                  ✓ Cash on Delivery (COD) is available
+                </div>
+              </div>
+            ) : (
+              <div className="text-[#B3261E] text-[12.5px]">
+                {pincodeStatus.message}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Return Window: Directly below pincode check */}
+        <div className="mt-3.5 pt-3 border-t border-[#E8DADD]/80 flex items-center justify-between text-[13px]">
+          <div className="flex items-center space-x-2 text-[#2B2224]">
+            <RotateCcw className="w-4 h-4 text-[#962949]" />
+            <span>
+              Easy <strong className="font-bold text-[#962949]">{returnDays}-day</strong> return / exchange
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={onOpenReturnsPolicy}
+            className="text-[#962949] hover:underline font-semibold text-[12.5px] cursor-pointer"
+          >
+            View Policy
+          </button>
+        </div>
+      </div>
+
+      {/* Product Details Collapsible Sections */}
+      <div className="border-t border-[#E8DADD] divide-y divide-[#E8DADD]">
+        {/* Section 1: Product Details */}
         <div className="py-4">
           <button
+            type="button"
             onClick={() => toggleAccordion('productDetails')}
-            className="w-full flex items-center justify-between text-[13.5px] font-semibold uppercase tracking-[0.06em] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer"
+            className="w-full flex items-center justify-between text-left text-[14px] font-bold text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer"
           >
-            <span>PRODUCT DETAILS</span>
+            <span className="font-serif text-[18px]">Product Details</span>
             {openAccordions.productDetails ? (
               <ChevronUp className="w-4 h-4 text-[#6F6265]" />
             ) : (
@@ -217,53 +449,94 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
             )}
           </button>
           {openAccordions.productDetails && (
-            <div className="mt-3 text-[14px] leading-relaxed text-[#2B2224]">
-              A hand-finished festive set with a soft cotton lining, comfortable elasticated waist
-              and delicate gota detailing.
+            <div className="mt-3 text-[13.5px] text-[#55474B] leading-relaxed space-y-2">
+              <p>{product?.description || 'A little twirl, a touch of tradition, and a whole lot of joyful comfort. This 100% pure silk and mulmul festive ensemble brings timeless craftsmanship to life.'}</p>
+              
+              <ul className="list-disc pl-5 space-y-1.5 pt-1 text-[#2B2224]">
+                <li>
+                  <strong>Package Contains:</strong>{' '}
+                  {product?.packageContains || '1 Kurta/Choli, 1 Lehenga/Bottom, 1 Dupatta'}
+                </li>
+                <li>
+                  <strong>Fabric:</strong>{' '}
+                  {product?.fabricDetails || '100% Pure Silk Chanderi with Breathable Cotton Mulmul Lining'}
+                </li>
+                <li>
+                  <strong>Design Details:</strong> Hand-worked delicate gota patti, comfortable elasticated waistband, and non-scratchy soft interior seams.
+                </li>
+                <li>
+                  <strong>Care Instruction:</strong>{' '}
+                  {product?.careInstructions || 'Gentle Dry Clean or Gentle Hand Wash'}
+                </li>
+              </ul>
             </div>
           )}
         </div>
 
-        {/* Accordion 2: FABRIC & CARE */}
+        {/* Section 2: Shipping and Returns - India */}
         <div className="py-4">
           <button
-            onClick={() => toggleAccordion('fabricCare')}
-            className="w-full flex items-center justify-between text-[13.5px] font-semibold uppercase tracking-[0.06em] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer"
+            type="button"
+            onClick={() => toggleAccordion('shippingReturns')}
+            className="w-full flex items-center justify-between text-left text-[14px] font-bold text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer"
           >
-            <span>FABRIC &amp; CARE</span>
-            {openAccordions.fabricCare ? (
+            <span className="font-serif text-[18px]">Shipping and Returns - India</span>
+            {openAccordions.shippingReturns ? (
               <ChevronUp className="w-4 h-4 text-[#6F6265]" />
             ) : (
               <ChevronDown className="w-4 h-4 text-[#6F6265]" />
             )}
           </button>
-          {openAccordions.fabricCare && (
-            <div className="mt-3 text-[14px] leading-relaxed text-[#2B2224] space-y-2">
-              <p>• <span className="font-medium">Fabric:</span> Pure Silk Chanderi base with 100% Breathable Cotton Mulmul lining.</p>
-              <p>• <span className="font-medium">Work:</span> Traditional hand-finished Gota Patti &amp; zari thread border.</p>
-              <p>• <span className="font-medium">Care:</span> Dry clean only. Warm iron on reverse side on silk setting.</p>
+          {openAccordions.shippingReturns && (
+            <div className="mt-3 text-[13px] text-[#55474B] leading-relaxed space-y-1.5">
+              <p>• Dispatched within 24–48 hours from our Jaipur atelier.</p>
+              <p>• Free prepaid shipping across India for orders above ₹1,499.</p>
+              <p>• Easy {returnDays}-day size exchange &amp; return with doorstep pick-up across 18,000+ pincodes.</p>
             </div>
           )}
         </div>
 
-        {/* Accordion 3: SHIPPING & EXCHANGE */}
+        {/* Section 3: International Shipping */}
         <div className="py-4">
           <button
-            onClick={() => toggleAccordion('shippingExchange')}
-            className="w-full flex items-center justify-between text-[13.5px] font-semibold uppercase tracking-[0.06em] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer"
+            type="button"
+            onClick={() => toggleAccordion('intlShipping')}
+            className="w-full flex items-center justify-between text-left text-[14px] font-bold text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer"
           >
-            <span>SHIPPING &amp; EXCHANGE</span>
-            {openAccordions.shippingExchange ? (
+            <span className="font-serif text-[18px]">International Shipping</span>
+            {openAccordions.intlShipping ? (
               <ChevronUp className="w-4 h-4 text-[#6F6265]" />
             ) : (
               <ChevronDown className="w-4 h-4 text-[#6F6265]" />
             )}
           </button>
-          {openAccordions.shippingExchange && (
-            <div className="mt-3 text-[14px] leading-relaxed text-[#2B2224] space-y-2">
-              <p>• Dispatched within 24-48 hours. Standard doorstep delivery in 3-7 business days across India.</p>
-              <p>• Free prepaid shipping on all orders above ₹1,499.</p>
-              <p>• Seamless 7-day size exchange from delivery date with free doorstep pickup.</p>
+          {openAccordions.intlShipping && (
+            <div className="mt-3 text-[13px] text-[#55474B] leading-relaxed space-y-1.5">
+              <p>• We ship worldwide via DHL &amp; FedEx Express (5–7 business days transit).</p>
+              <p>• Customs duties and local import taxes are handled transparently at checkout.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Section 4: Supplier Information */}
+        <div className="py-4">
+          <button
+            type="button"
+            onClick={() => toggleAccordion('supplierInfo')}
+            className="w-full flex items-center justify-between text-left text-[14px] font-bold text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer"
+          >
+            <span className="font-serif text-[18px]">Supplier Information</span>
+            {openAccordions.supplierInfo ? (
+              <ChevronUp className="w-4 h-4 text-[#6F6265]" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-[#6F6265]" />
+            )}
+          </button>
+          {openAccordions.supplierInfo && (
+            <div className="mt-3 text-[13px] text-[#55474B] leading-relaxed space-y-1">
+              <p><strong>Manufactured &amp; Packed By:</strong> Boota Kids Heritage Pvt. Ltd.</p>
+              <p><strong>Atelier Location:</strong> Plot 14, C-Scheme, Jaipur, Rajasthan, 302001, India.</p>
+              <p><strong>Customer Care:</strong> care@bootakids.com | +91 7291947002</p>
             </div>
           )}
         </div>

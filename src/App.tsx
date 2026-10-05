@@ -17,7 +17,10 @@ import { SearchModal } from './components/SearchModal';
 import { FloatingChat } from './components/FloatingChat';
 import { CartItem, Product, AnnouncementMessage } from './types';
 import { initialAnnouncements, allProducts } from './data/products';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Settings } from 'lucide-react';
+import { BestPairedWith } from './components/BestPairedWith';
+import { SimilarStyleCarousel } from './components/SimilarStyleCarousel';
+import { AdminProductSettingsModal } from './components/AdminProductSettingsModal';
 
 // Specialized Content & Brand Pages
 import { AboutUsPage } from './pages/AboutUsPage';
@@ -59,7 +62,18 @@ export type AppView =
   | 'returns';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<AppView>('home');
+  const [currentView, setCurrentView] = useState<AppView>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '');
+      if (hash === 'home') return 'home';
+      if (hash === 'pdp') return 'pdp';
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('view') === 'home') return 'home';
+      // Default to 'pdp' so the user directly sees the product page requested
+      return 'pdp';
+    }
+    return 'pdp';
+  });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(allProducts[0]);
   const [announcements, setAnnouncements] = useState<AnnouncementMessage[]>(initialAnnouncements);
 
@@ -82,6 +96,45 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Admin Configurable Return Window & Best Paired With Map
+  const [returnDays, setReturnDays] = useState<number>(() => {
+    const saved = localStorage.getItem('boota_return_days');
+    return saved ? Number(saved) : 7;
+  });
+
+  const [pairedProductMap, setPairedProductMap] = useState<{ [productId: string]: string[] }>(() => {
+    const saved = localStorage.getItem('boota_paired_products');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        // fallback
+      }
+    }
+    return {
+      'gulnar-silk-lehenga': ['kundan-headband', 'kolhapuri-sandals', 'potli-bag'],
+      'noorani-tissue-sharara': ['kundan-headband', 'lac-bangles', 'potli-bag'],
+      'kesar-bandhani-gharara': ['lac-bangles', 'kolhapuri-sandals', 'potli-bag'],
+    };
+  });
+
+  const [adminSettingsOpen, setAdminSettingsOpen] = useState(false);
+
+  const handleUpdateReturnDays = (days: number) => {
+    setReturnDays(days);
+    localStorage.setItem('boota_return_days', String(days));
+    showToast(`Return window updated to ${days} days`);
+  };
+
+  const handleUpdatePairedProducts = (productId: string, pairedIds: string[]) => {
+    setPairedProductMap((prev) => {
+      const updated = { ...prev, [productId]: pairedIds };
+      localStorage.setItem('boota_paired_products', JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Best paired with products updated!');
+  };
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -283,8 +336,18 @@ export default function App() {
         }}
         onNavigatePage={handleNavigatePage}
         onSelectCategory={(cat) => {
-          setCurrentView('home');
-          showToast(`Viewing ${cat} collection`);
+          const match = allProducts.find(
+            (p) =>
+              p.name.toLowerCase().includes(cat.toLowerCase()) ||
+              p.category.toLowerCase().includes(cat.toLowerCase()) ||
+              p.collection.toLowerCase().includes(cat.toLowerCase())
+          );
+          if (match) {
+            setSelectedProduct(match);
+          }
+          setCurrentView('pdp');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          showToast(`Viewing ${match?.name || cat}`);
         }}
       />
 
@@ -400,22 +463,37 @@ export default function App() {
                   </span>
                 </nav>
 
-                <button
-                  onClick={() => setCurrentView('home')}
-                  className="inline-flex items-center space-x-1.5 text-[12.5px] font-semibold uppercase tracking-[0.06em] text-[#962949] hover:text-[#80223d] transition-colors cursor-pointer"
-                >
-                  <ArrowLeft className="w-4 h-4 stroke-[2]" />
-                  <span>Back to Home</span>
-                </button>
+                <div className="flex items-center space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => setAdminSettingsOpen(true)}
+                    className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-[4px] border border-[#E8DADD] bg-white hover:bg-[#FAF6F4] text-[12px] font-semibold text-[#962949] transition-colors cursor-pointer shadow-2xs"
+                    title="Store Admin: Edit Return Window & Best Paired With Products"
+                  >
+                    <Settings className="w-3.5 h-3.5" />
+                    <span>Store Admin</span>
+                  </button>
+
+                  <button
+                    onClick={() => setCurrentView('home')}
+                    className="inline-flex items-center space-x-1.5 text-[12.5px] font-semibold uppercase tracking-[0.06em] text-[#962949] hover:text-[#80223d] transition-colors cursor-pointer"
+                  >
+                    <ArrowLeft className="w-4 h-4 stroke-[2]" />
+                    <span>Back to Home</span>
+                  </button>
+                </div>
               </div>
             </div>
 
             {/* Product Hero 2-Column Split */}
             <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px] py-6 lg:py-10">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
+                {/* Left: Minimum 6 images gallery with hover zoom & lightbox */}
                 <div className="lg:col-span-7">
                   <ProductGallery product={selectedProduct} />
                 </div>
+
+                {/* Right: Sticky product information & purchase details */}
                 <div className="lg:col-span-5 lg:sticky lg:top-24">
                   <ProductDetails
                     product={selectedProduct}
@@ -426,14 +504,44 @@ export default function App() {
                     isWishlisted={
                       selectedProduct ? wishlistIds.includes(selectedProduct.id) : false
                     }
+                    onOpenSizeGuide={() => handleNavigatePage('size-guide')}
                     onOpenReviews={() => setReviewsOpen(true)}
+                    onOpenReturnsPolicy={() => handleNavigatePage('returns')}
+                    returnDays={returnDays}
                   />
                 </div>
               </div>
+
+              {/* "Best paired with" cross-sell section */}
+              <BestPairedWith
+                currentProduct={selectedProduct}
+                allProducts={allProducts}
+                pairedIds={pairedProductMap[selectedProduct?.id || '']}
+                onAddToBag={(item) =>
+                  handleAddToBag(item.sizes[0] || 'Free Size', item.color, item)
+                }
+                onSelectProduct={handleSelectProduct}
+                onToggleWishlist={handleToggleWishlist}
+                wishlistIds={wishlistIds}
+              />
             </div>
 
             {/* Product Craft Details Section */}
             <TheDetailsSection />
+
+            {/* Bottom: "similar style" scrollable row */}
+            <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px]">
+              <SimilarStyleCarousel
+                currentProduct={selectedProduct}
+                allProducts={allProducts}
+                onSelectProduct={handleSelectProduct}
+                onAddToBag={(item) =>
+                  handleAddToBag(item.sizes[0] || '1-2 Y', item.color, item)
+                }
+                onToggleWishlist={handleToggleWishlist}
+                wishlistIds={wishlistIds}
+              />
+            </div>
           </div>
         )}
       </main>
@@ -531,6 +639,18 @@ export default function App() {
           {toastMessage}
         </div>
       )}
+
+      {/* Store Admin Settings Modal (Editable Return Days & Best Paired With) */}
+      <AdminProductSettingsModal
+        isOpen={adminSettingsOpen}
+        onClose={() => setAdminSettingsOpen(false)}
+        returnDays={returnDays}
+        onUpdateReturnDays={handleUpdateReturnDays}
+        allProducts={allProducts}
+        currentProduct={selectedProduct}
+        pairedProductMap={pairedProductMap}
+        onUpdatePairedProducts={handleUpdatePairedProducts}
+      />
 
       {/* WhatsApp Concierge / Floating Help */}
       <FloatingChat />

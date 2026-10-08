@@ -62,7 +62,7 @@ export const AnnouncementBar: React.FC<AnnouncementBarProps> = ({
   return (
     <>
       <div className="relative w-full h-[36px] bg-[#F9D0D6] border-b border-[#E8DADD] text-[#962949] flex items-center justify-center select-none overflow-hidden z-20">
-        <div className="max-w-[1320px] w-full mx-auto px-4 md:px-8 flex items-center justify-between text-[12px] md:text-[13px] font-manrope font-medium tracking-[0.03em]">
+        <div className="w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-12 flex items-center justify-between text-[12px] md:text-[13px] font-manrope font-medium tracking-[0.03em]">
           <div className="w-6 hidden md:block" />
           
           {/* Static Centered Rotating Message with Fade */}

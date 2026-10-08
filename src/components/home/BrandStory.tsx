@@ -22,17 +22,6 @@ export const BrandStory: React.FC<BrandStoryProps> = ({ onOpenStory }) => {
               />
               <div className="absolute inset-0 bg-[#962949]/5 pointer-events-none" />
             </div>
-
-            {/* Small Floating Artisan Badge */}
-            <div className="absolute -bottom-4 right-4 sm:right-8 bg-white border border-[#E8DADD] rounded-[4px] p-3 shadow-md flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-full bg-[#F9D0D6] text-[#962949] flex items-center justify-center">
-                <Sparkles className="w-4 h-4 stroke-[2]" />
-              </div>
-              <div>
-                <div className="text-[12px] font-semibold text-[#2B2224]">Pure Handcraft</div>
-                <div className="text-[11px] text-[#6F6265]">Zero synthetic scratchy linings</div>
-              </div>
-            </div>
           </div>
 
           {/* Text Content (60-80 words per specification) */}

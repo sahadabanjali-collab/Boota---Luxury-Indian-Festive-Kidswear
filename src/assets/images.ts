@@ -102,3 +102,4 @@ export const ageTilesData = [
 ];
 
 export const brandStoryImage = brandStory;
+export { ageBaby, ageToddler, ageKids, heroFestiveDesktop, heroDesiDesktop, heroLuxeDesktop };

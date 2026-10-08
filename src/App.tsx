@@ -14,6 +14,7 @@ import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { ReviewsModal } from './components/ReviewsModal';
 import { SearchModal } from './components/SearchModal';
+import { SizeGuideModal } from './components/SizeGuideModal';
 import { FloatingChat } from './components/FloatingChat';
 import { CartItem, Product, AnnouncementMessage } from './types';
 import { initialAnnouncements, allProducts } from './data/products';
@@ -23,6 +24,7 @@ import { SimilarStyleCarousel } from './components/SimilarStyleCarousel';
 import { AdminProductSettingsModal } from './components/AdminProductSettingsModal';
 
 // Specialized Content & Brand Pages
+import { GirlsLandingPage } from './pages/GirlsLandingPage';
 import { AboutUsPage } from './pages/AboutUsPage';
 import { WhyChooseBootaPage } from './pages/WhyChooseBootaPage';
 import { BlogPage } from './pages/BlogPage';
@@ -50,6 +52,7 @@ import { ReturnExchangeModal } from './components/account/ReturnExchangeModal';
 
 export type AppView =
   | 'home'
+  | 'girl'
   | 'pdp'
   | 'about'
   | 'why-boota'
@@ -66,9 +69,11 @@ export default function App() {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace('#', '');
       if (hash === 'home') return 'home';
+      if (hash === 'girl' || hash === 'girls') return 'girl';
       if (hash === 'pdp') return 'pdp';
       const params = new URLSearchParams(window.location.search);
       if (params.get('view') === 'home') return 'home';
+      if (params.get('view') === 'girl' || params.get('view') === 'girls') return 'girl';
       // Default to 'pdp' so the user directly sees the product page requested
       return 'pdp';
     }
@@ -94,6 +99,7 @@ export default function App() {
   const [cartOpen, setCartOpen] = useState(false);
   const [reviewsOpen, setReviewsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -271,6 +277,7 @@ export default function App() {
   const handleNavigatePage = (page: string) => {
     const validPages: AppView[] = [
       'home',
+      'girl',
       'pdp',
       'about',
       'why-boota',
@@ -283,6 +290,7 @@ export default function App() {
       'returns',
     ];
     let target = page.toLowerCase().replace('#', '') as AppView;
+    if (target === ('girls' as any)) target = 'girl';
     if (target === ('contact-us' as any)) target = 'contact';
     if (target === ('return' as any) || target === ('returns-exchanges' as any)) target = 'returns';
 
@@ -336,6 +344,10 @@ export default function App() {
         }}
         onNavigatePage={handleNavigatePage}
         onSelectCategory={(cat) => {
+          if (cat.toLowerCase() === 'girl' || cat.toLowerCase() === 'girls') {
+            handleNavigatePage('girl');
+            return;
+          }
           const match = allProducts.find(
             (p) =>
               p.name.toLowerCase().includes(cat.toLowerCase()) ||
@@ -353,6 +365,23 @@ export default function App() {
 
       {/* Main View Router */}
       <main className="flex-1">
+        {currentView === 'girl' && (
+          <GirlsLandingPage
+            products={allProducts}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onSelectProduct={(p) => {
+              setSelectedProduct(p);
+              setCurrentView('pdp');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onAddToCart={(p, size) => {
+              handleAddToBag(size || p.sizes[0] || '1-2 Y', p.color, p);
+            }}
+            onNavigateHome={() => handleNavigatePage('home')}
+          />
+        )}
+
         {currentView === 'home' && (
           <HomePage
             wishlistIds={wishlistIds}
@@ -504,7 +533,7 @@ export default function App() {
                     isWishlisted={
                       selectedProduct ? wishlistIds.includes(selectedProduct.id) : false
                     }
-                    onOpenSizeGuide={() => handleNavigatePage('size-guide')}
+                    onOpenSizeGuide={() => setSizeGuideOpen(true)}
                     onOpenReviews={() => setReviewsOpen(true)}
                     onOpenReturnsPolicy={() => handleNavigatePage('returns')}
                     returnDays={returnDays}
@@ -579,6 +608,17 @@ export default function App() {
           }
           setSearchOpen(false);
         }}
+      />
+
+      {/* Sizing Pop-up Modal for Clothes */}
+      <SizeGuideModal
+        isOpen={sizeGuideOpen}
+        onClose={() => setSizeGuideOpen(false)}
+        onViewFullPage={() => {
+          setSizeGuideOpen(false);
+          handleNavigatePage('size-guide');
+        }}
+        productName={selectedProduct?.name}
       />
 
       {/* Customer Account Dashboard Modal */}

@@ -23,28 +23,28 @@ export const ShopByAge: React.FC<ShopByAgeProps> = ({ onSelectAge }) => {
           </p>
         </div>
 
-        {/* 3 Smaller Images (about 180–220px wide), Three in a Row, Centred */}
-        <div className="max-w-[680px] mx-auto grid grid-cols-3 gap-3 sm:gap-5 justify-center">
+        {/* High-impact Portrait Cards matching screenshot dimensions */}
+        <div className="max-w-[1140px] mx-auto grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-7 lg:gap-8 justify-center">
           {ageTilesData.map((tile) => (
             <div
               key={tile.id}
               onClick={() => onSelectAge && onSelectAge(tile.tag)}
-              className="group relative cursor-pointer overflow-hidden rounded-[6px] border border-[#E8DADD]/80 bg-[#FAF6F4] transition-all duration-300 hover:shadow-md hover:border-[#962949]/40 flex flex-col"
+              className="group relative cursor-pointer overflow-hidden rounded-[8px] border border-[#E8DADD] bg-[#FAF6F4] transition-all duration-300 hover:shadow-lg hover:border-[#962949]/40 flex flex-col"
             >
-              {/* 4:5 Image Container */}
-              <div className="aspect-[4/5] w-full overflow-hidden bg-[#FAF6F4] relative">
+              {/* Tall Portrait Image Container matching screenshot */}
+              <div className="aspect-[3/4] w-full overflow-hidden bg-[#FAF6F4] relative">
                 <img
                   src={tile.image}
                   alt={`Boota ${tile.title} Collection (${tile.ageRange})`}
-                  className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
                   loading="lazy"
                 />
-                {/* Light ivory/white shade only on the lower portion of the image behind the name */}
-                <div className="absolute inset-x-0 bottom-0 pt-8 sm:pt-10 pb-2.5 sm:pb-3.5 px-2 sm:px-3 bg-gradient-to-t from-[#FFFDF9]/95 via-[#FFFDF9]/80 to-transparent flex flex-col items-center justify-end text-center transition-all duration-300">
-                  <h3 className="font-serif font-bold text-[15px] sm:text-[18px] md:text-[20px] text-[#962949] tracking-tight leading-tight m-0 group-hover:scale-[1.02] transition-transform">
+                {/* Light ivory/white shade on the lower portion of the image behind the name */}
+                <div className="absolute inset-x-0 bottom-0 pt-10 pb-3 px-3 bg-gradient-to-t from-[#FFFDF9]/95 via-[#FFFDF9]/80 to-transparent flex flex-col items-center justify-end text-center transition-all duration-300">
+                  <h3 className="font-serif font-bold text-[18px] sm:text-[20px] md:text-[22px] text-[#962949] tracking-tight leading-tight m-0 group-hover:scale-[1.02] transition-transform">
                     {tile.title}
                   </h3>
-                  <span className="text-[10px] sm:text-[11.5px] font-semibold text-[#6F6265] tracking-wide mt-0.5">
+                  <span className="text-[11px] sm:text-[12px] font-semibold text-[#6F6265] tracking-wide mt-1">
                     {tile.ageRange}
                   </span>
                 </div>

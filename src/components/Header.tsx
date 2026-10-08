@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Heart, Menu, X, ChevronDown, RotateCcw } from 'lucide-react';
+import { Search, User, Heart, ShoppingCart, Menu, X, ChevronDown, RotateCcw } from 'lucide-react';
 import { MegaMenu, NavTab } from './MegaMenu';
-import { bootaLogo, cartIconImg } from '../assets/images';
+import { bootaLogo } from '../assets/images';
 
 interface HeaderProps {
   cartCount: number;
@@ -82,17 +82,18 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header
+      onMouseLeave={() => setActiveTab(null)}
       className={`relative bg-[#FFFFFF] border-b border-[#E8DADD] sticky top-0 z-30 transition-all duration-300 ease-in-out ${
         isScrolled ? 'shadow-xs' : ''
       }`}
     >
       <div
-        className={`max-w-[1320px] mx-auto px-4 md:px-8 lg:px-[56px] flex items-center justify-between transition-all duration-300 ${
+        className={`w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex items-center justify-between transition-all duration-300 relative ${
           isScrolled ? 'h-16' : 'h-20'
         }`}
       >
         {/* Left: Mobile hamburger & Brand */}
-        <div className="flex items-center gap-4 shrink-0 mr-8 lg:mr-12 xl:mr-14">
+        <div className="flex items-center gap-3 sm:gap-4 shrink-0 z-10">
           <button
             onClick={() => setMobileMenuOpen(true)}
             className="md:hidden p-1.5 text-[#2B2224] hover:text-[#962949] cursor-pointer"
@@ -104,24 +105,25 @@ export const Header: React.FC<HeaderProps> = ({
           <a
             href="/"
             onClick={handleLogoClick}
-            className="flex items-center hover:opacity-90 transition-opacity pr-1 py-1 shrink-0 cursor-pointer"
+            className="flex items-center hover:opacity-90 transition-opacity pr-2 py-1 shrink-0 cursor-pointer"
             aria-label="Boota Homepage"
           >
             <img
               src={bootaLogo}
               alt="Boota"
               className={`object-contain transition-all duration-300 ${
-                isScrolled ? 'h-10 sm:h-12 w-auto max-h-12' : 'h-12 sm:h-14 w-auto max-h-14'
+                isScrolled ? 'h-10 sm:h-11 w-auto max-h-11' : 'h-12 sm:h-13 w-auto max-h-13'
               }`}
               referrerPolicy="no-referrer"
             />
           </a>
         </div>
 
-        {/* Center: Desktop Navigation - Exactly 5 items: GIRL · COLLECTION · OCCASIONS · ACCESSORIES · SALE */}
-        <nav className="hidden md:flex items-center space-x-6 lg:space-x-8 xl:space-x-10 ml-8 lg:ml-12 xl:ml-16">
+        {/* Center: Desktop Navigation in Title Case matching reference */}
+        <nav className="hidden md:flex items-center justify-center space-x-7 lg:space-x-8 xl:space-x-10 absolute left-1/2 -translate-x-1/2">
           {navTabs.map((tab) => {
-            const isActive = activeTab === tab;
+            const isActive = activeTab === tab || (tab === 'GIRL' && currentView === 'girl');
+            const label = tab.charAt(0).toUpperCase() + tab.slice(1).toLowerCase();
             return (
               <div
                 key={tab}
@@ -129,50 +131,60 @@ export const Header: React.FC<HeaderProps> = ({
                 onMouseEnter={() => setActiveTab(tab)}
               >
                 <button
-                  onClick={() => setActiveTab(activeTab === tab ? null : tab)}
-                  className={`text-[12.5px] lg:text-[13px] font-medium tracking-[0.04em] uppercase transition-colors cursor-pointer whitespace-nowrap ${
+                  onClick={() => {
+                    if (tab === 'GIRL') {
+                      setActiveTab(null);
+                      if (onNavigatePage) onNavigatePage('girl');
+                    } else {
+                      setActiveTab(activeTab === tab ? null : tab);
+                    }
+                  }}
+                  className={`text-[15px] lg:text-[15.5px] font-medium tracking-normal transition-colors cursor-pointer whitespace-nowrap ${
                     isActive ? 'text-[#962949]' : 'text-[#2B2224] hover:text-[#962949]'
                   }`}
                 >
-                  {tab}
+                  {label}
                 </button>
                 {isActive && (
-                  <span className="absolute bottom-5 left-0 right-0 h-[2px] bg-[#962949]" />
+                  <span className="absolute bottom-5 left-0 right-0 h-[2px] bg-[#962949] rounded-full" />
                 )}
               </div>
             );
           })}
         </nav>
 
-        {/* Right: Actions - Moved to the far right, aligned with page content edge */}
-        <div className="ml-auto flex items-center space-x-3.5 sm:space-x-4 lg:space-x-5 text-[#2B2224] shrink-0 justify-end -mr-1.5 sm:mr-0">
+        {/* Right: Actions - 4 icons pushed all the way to the right */}
+        <div className="ml-auto flex items-center space-x-5 lg:space-x-6 text-[#2B2224] shrink-0 justify-end z-10">
           {/* Search */}
           <button
             onClick={onOpenSearch}
-            className="p-1.5 hover:text-[#962949] transition-colors cursor-pointer rounded-[4px]"
+            className="p-1 hover:text-[#962949] transition-colors cursor-pointer rounded-full"
             aria-label="Search collection"
+            title="Search"
           >
-            <Search className="w-[18px] h-[18px] stroke-[1.8]" />
+            <Search className="w-5 h-5 stroke-[1.8]" />
           </button>
 
-          {/* Account - Text only, no person icon, strictly on one line */}
+          {/* User / My Account Icon */}
           <button
             onClick={onOpenAccount}
-            className="text-[12.5px] lg:text-[13px] font-medium tracking-[0.03em] uppercase text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer whitespace-nowrap shrink-0 py-1.5 px-1"
+            className="p-1 hover:text-[#962949] transition-colors cursor-pointer rounded-full"
             aria-label="My Account"
+            title="My Account"
           >
-            <span className="whitespace-nowrap inline-block">My Account</span>
+            <User className="w-5 h-5 stroke-[1.8]" />
           </button>
 
           {/* Wishlist */}
           <button
             onClick={onOpenWishlist}
-            className="relative p-1.5 hover:text-[#962949] transition-colors cursor-pointer rounded-[4px]"
+            className="relative p-1 hover:text-[#962949] transition-colors cursor-pointer rounded-full"
             aria-label="Wishlist"
+            title="Wishlist"
           >
-            <Heart className="w-[18px] h-[18px] stroke-[1.8]" />
+            <Heart className="w-5 h-5 stroke-[1.8]" />
             {wishlistCount > 0 && (
-              <span className="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 bg-[#962949] text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none shadow-xs">
+              <span className="absolute -top-1.5 -right-1.5 min-w-[17px] h-[17px] px-1 bg-[#962949] text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none shadow-xs">
                 {wishlistCount}
               </span>
             )}
@@ -181,16 +193,13 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Cart / Shopping Bag Button */}
           <button
             onClick={onOpenCart}
-            className="relative p-1.5 hover:opacity-75 transition-opacity cursor-pointer rounded-[4px] flex items-center justify-center"
-            aria-label="Shopping Bag"
+            className="relative p-1 hover:text-[#962949] transition-colors cursor-pointer rounded-full flex items-center justify-center"
+            aria-label="Shopping Cart"
+            title="Shopping Cart"
           >
-            <img
-              src={cartIconImg}
-              alt="Shopping Bag"
-              className="w-[19px] h-[19px] object-contain mix-blend-multiply"
-            />
-            {cartCount !== undefined && (
-              <span className="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 bg-[#962949] text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none shadow-xs">
+            <ShoppingCart className="w-5 h-5 stroke-[1.8]" />
+            {cartCount !== undefined && cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 min-w-[17px] h-[17px] px-1 bg-[#962949] text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none shadow-xs">
                 {cartCount}
               </span>
             )}
@@ -285,6 +294,16 @@ export const Header: React.FC<HeaderProps> = ({
                     <div className="px-6 pb-5 pt-1 space-y-4 bg-[#FFFDF9] border-t border-[#E8DADD]/60 text-[13.5px]">
                       {tab === 'GIRL' && (
                         <div className="space-y-4 pt-2">
+                          <button
+                            onClick={() => {
+                              setMobileMenuOpen(false);
+                              if (onNavigatePage) onNavigatePage('girl');
+                            }}
+                            className="w-full text-left font-bold text-[#142B6F] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
+                          >
+                            <span>Explore All Girls Collection</span>
+                            <span>→</span>
+                          </button>
                           <div>
                             <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
                               Boota Desi

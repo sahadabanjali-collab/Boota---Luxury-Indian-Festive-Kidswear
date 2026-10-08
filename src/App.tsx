@@ -25,6 +25,10 @@ import { AdminProductSettingsModal } from './components/AdminProductSettingsModa
 
 // Specialized Content & Brand Pages
 import { GirlsLandingPage } from './pages/GirlsLandingPage';
+import { AccessoriesLandingPage } from './pages/AccessoriesLandingPage';
+import { CollectionsLandingPage } from './pages/CollectionsLandingPage';
+import { OccasionsLandingPage } from './pages/OccasionsLandingPage';
+import { SaleLandingPage } from './pages/SaleLandingPage';
 import { AboutUsPage } from './pages/AboutUsPage';
 import { WhyChooseBootaPage } from './pages/WhyChooseBootaPage';
 import { BlogPage } from './pages/BlogPage';
@@ -53,6 +57,10 @@ import { ReturnExchangeModal } from './components/account/ReturnExchangeModal';
 export type AppView =
   | 'home'
   | 'girl'
+  | 'collection'
+  | 'accessories'
+  | 'occasions'
+  | 'sale'
   | 'pdp'
   | 'about'
   | 'why-boota'
@@ -70,10 +78,18 @@ export default function App() {
       const hash = window.location.hash.replace('#', '');
       if (hash === 'home') return 'home';
       if (hash === 'girl' || hash === 'girls') return 'girl';
+      if (hash === 'collection' || hash === 'collections') return 'collection';
+      if (hash === 'accessories' || hash === 'accessory') return 'accessories';
+      if (hash === 'occasions' || hash === 'occasion') return 'occasions';
+      if (hash === 'sale') return 'sale';
       if (hash === 'pdp') return 'pdp';
       const params = new URLSearchParams(window.location.search);
       if (params.get('view') === 'home') return 'home';
       if (params.get('view') === 'girl' || params.get('view') === 'girls') return 'girl';
+      if (params.get('view') === 'collection' || params.get('view') === 'collections') return 'collection';
+      if (params.get('view') === 'accessories' || params.get('view') === 'accessory') return 'accessories';
+      if (params.get('view') === 'occasions' || params.get('view') === 'occasion') return 'occasions';
+      if (params.get('view') === 'sale') return 'sale';
       // Default to 'pdp' so the user directly sees the product page requested
       return 'pdp';
     }
@@ -81,6 +97,9 @@ export default function App() {
   });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(allProducts[0]);
   const [announcements, setAnnouncements] = useState<AnnouncementMessage[]>(initialAnnouncements);
+  const [collectionFilter, setCollectionFilter] = useState<'all' | 'desi' | 'play' | 'luxe'>('all');
+  const [occasionFilter, setOccasionFilter] = useState<string>('all');
+  const [saleFilter, setSaleFilter] = useState<string>('all');
 
   // Customer Account & Orders State
   const [userProfile, setUserProfile] = useState<UserProfile>(getStoredUserProfile);
@@ -278,6 +297,10 @@ export default function App() {
     const validPages: AppView[] = [
       'home',
       'girl',
+      'collection',
+      'accessories',
+      'occasions',
+      'sale',
       'pdp',
       'about',
       'why-boota',
@@ -291,6 +314,10 @@ export default function App() {
     ];
     let target = page.toLowerCase().replace('#', '') as AppView;
     if (target === ('girls' as any)) target = 'girl';
+    if (target === ('collections' as any)) target = 'collection';
+    if (target === ('accessory' as any) || target === ('acc' as any)) target = 'accessories';
+    if (target === ('occasion' as any)) target = 'occasions';
+    if (target === ('sales' as any)) target = 'sale';
     if (target === ('contact-us' as any)) target = 'contact';
     if (target === ('return' as any) || target === ('returns-exchanges' as any)) target = 'returns';
 
@@ -348,6 +375,90 @@ export default function App() {
             handleNavigatePage('girl');
             return;
           }
+          if (cat.toLowerCase() === 'collection' || cat.toLowerCase() === 'collections') {
+            setCollectionFilter('all');
+            handleNavigatePage('collection');
+            return;
+          }
+          if (cat.toLowerCase() === 'accessories' || cat.toLowerCase() === 'accessory') {
+            handleNavigatePage('accessories');
+            return;
+          }
+          if (cat.toLowerCase() === 'occasions' || cat.toLowerCase() === 'occasion') {
+            setOccasionFilter('all');
+            handleNavigatePage('occasions');
+            return;
+          }
+          if (cat.toLowerCase() === 'sale' || cat.toLowerCase() === 'all sale') {
+            setSaleFilter('all');
+            handleNavigatePage('sale');
+            return;
+          }
+          if (cat.toLowerCase().includes('sale') && cat.toLowerCase().includes('desi')) {
+            setSaleFilter('desi');
+            handleNavigatePage('sale');
+            return;
+          }
+          if (cat.toLowerCase().includes('sale') && cat.toLowerCase().includes('play')) {
+            setSaleFilter('play');
+            handleNavigatePage('sale');
+            return;
+          }
+          if (cat.toLowerCase().includes('sale') && cat.toLowerCase().includes('luxe')) {
+            setSaleFilter('luxe');
+            handleNavigatePage('sale');
+            return;
+          }
+          if (
+            cat.toLowerCase().includes('special offer') ||
+            cat.toLowerCase().includes('special prices') ||
+            cat.toLowerCase().includes('last chance') ||
+            cat.toLowerCase().includes('first time on sale')
+          ) {
+            setSaleFilter('special');
+            handleNavigatePage('sale');
+            return;
+          }
+          if (cat.toLowerCase().includes('ganesh') || cat.toLowerCase().includes('ganpati')) {
+            setOccasionFilter('ganesh-chaturthi');
+            handleNavigatePage('occasions');
+            return;
+          }
+          if (cat.toLowerCase().includes('navratri') || cat.toLowerCase().includes('durga')) {
+            setOccasionFilter('navratri');
+            handleNavigatePage('occasions');
+            return;
+          }
+          if (cat.toLowerCase().includes('diwali') || cat.toLowerCase().includes('dussehra')) {
+            setOccasionFilter('diwali');
+            handleNavigatePage('occasions');
+            return;
+          }
+          if (
+            cat.toLowerCase().includes('baby welcome') ||
+            cat.toLowerCase().includes('mundan') ||
+            cat.toLowerCase().includes('annaprashan') ||
+            cat.toLowerCase().includes('baby ceremonies')
+          ) {
+            setOccasionFilter('baby-ceremonies');
+            handleNavigatePage('occasions');
+            return;
+          }
+          if (cat.toLowerCase() === 'boota desi') {
+            setCollectionFilter('desi');
+            handleNavigatePage('collection');
+            return;
+          }
+          if (cat.toLowerCase() === 'boota play') {
+            setCollectionFilter('play');
+            handleNavigatePage('collection');
+            return;
+          }
+          if (cat.toLowerCase() === 'boota luxe') {
+            setCollectionFilter('luxe');
+            handleNavigatePage('collection');
+            return;
+          }
           const match = allProducts.find(
             (p) =>
               p.name.toLowerCase().includes(cat.toLowerCase()) ||
@@ -365,6 +476,77 @@ export default function App() {
 
       {/* Main View Router */}
       <main className="flex-1">
+        {currentView === 'sale' && (
+          <SaleLandingPage
+            products={allProducts}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onSelectProduct={(p) => {
+              setSelectedProduct(p);
+              setCurrentView('pdp');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onAddToCart={(p, size) => {
+              handleAddToBag(size || p.sizes[0] || '1-2 Y', p.color, p);
+            }}
+            onNavigateHome={() => handleNavigatePage('home')}
+            initialFilter={saleFilter}
+          />
+        )}
+
+        {currentView === 'occasions' && (
+          <OccasionsLandingPage
+            products={allProducts}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onSelectProduct={(p) => {
+              setSelectedProduct(p);
+              setCurrentView('pdp');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onAddToCart={(p, size) => {
+              handleAddToBag(size || p.sizes[0] || '1-2 Y', p.color, p);
+            }}
+            onNavigateHome={() => handleNavigatePage('home')}
+            initialFilter={occasionFilter}
+          />
+        )}
+
+        {currentView === 'collection' && (
+          <CollectionsLandingPage
+            products={allProducts}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onSelectProduct={(p) => {
+              setSelectedProduct(p);
+              setCurrentView('pdp');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onAddToCart={(p, size) => {
+              handleAddToBag(size || p.sizes[0] || '1-2 Y', p.color, p);
+            }}
+            onNavigateHome={() => handleNavigatePage('home')}
+            initialFilter={collectionFilter}
+          />
+        )}
+
+        {currentView === 'accessories' && (
+          <AccessoriesLandingPage
+            products={allProducts}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={handleToggleWishlist}
+            onSelectProduct={(p) => {
+              setSelectedProduct(p);
+              setCurrentView('pdp');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onAddToCart={(p, size) => {
+              handleAddToBag(size || p.sizes[0] || 'Free Size', p.color, p);
+            }}
+            onNavigateHome={() => handleNavigatePage('home')}
+          />
+        )}
+
         {currentView === 'girl' && (
           <GirlsLandingPage
             products={allProducts}

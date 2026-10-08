@@ -611,7 +611,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
                 <li>
                   <a
                     href="#diwali"
-                    onClick={(e) => handleItemClick(e, 'Festive Celebrations')}
+                    onClick={(e) => handleItemClick(e, 'Diwali')}
                     className="hover:text-[#962949] transition-colors block leading-relaxed"
                   >
                     Diwali Festive Edit
@@ -620,7 +620,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
                 <li>
                   <a
                     href="#navratri"
-                    onClick={(e) => handleItemClick(e, 'Festive Celebrations')}
+                    onClick={(e) => handleItemClick(e, 'Navratri')}
                     className="hover:text-[#962949] transition-colors block leading-relaxed"
                   >
                     Navratri &amp; Durga Puja
@@ -629,7 +629,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
                 <li>
                   <a
                     href="#ganesh"
-                    onClick={(e) => handleItemClick(e, 'Festive Celebrations')}
+                    onClick={(e) => handleItemClick(e, 'Ganesh Chaturthi')}
                     className="hover:text-[#962949] transition-colors block leading-relaxed"
                   >
                     Ganesh Chaturthi
@@ -638,7 +638,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
                 <li>
                   <a
                     href="#raksha-bandhan"
-                    onClick={(e) => handleItemClick(e, 'Festive Celebrations')}
+                    onClick={(e) => handleItemClick(e, 'Festive')}
                     className="hover:text-[#962949] transition-colors block leading-relaxed"
                   >
                     Raksha Bandhan Sibling Sets

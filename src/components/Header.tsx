@@ -122,7 +122,13 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Center: Desktop Navigation in Title Case matching reference */}
         <nav className="hidden md:flex items-center justify-center space-x-7 lg:space-x-8 xl:space-x-10 absolute left-1/2 -translate-x-1/2">
           {navTabs.map((tab) => {
-            const isActive = activeTab === tab || (tab === 'GIRL' && currentView === 'girl');
+            const isActive =
+              activeTab === tab ||
+              (tab === 'GIRL' && currentView === 'girl') ||
+              (tab === 'ACCESSORIES' && currentView === 'accessories') ||
+              (tab === 'COLLECTION' && currentView === 'collection') ||
+              (tab === 'OCCASIONS' && (currentView === 'occasions' || currentView as string === 'occasion')) ||
+              (tab === 'SALE' && currentView === 'sale');
             const label = tab.charAt(0).toUpperCase() + tab.slice(1).toLowerCase();
             return (
               <div
@@ -135,6 +141,18 @@ export const Header: React.FC<HeaderProps> = ({
                     if (tab === 'GIRL') {
                       setActiveTab(null);
                       if (onNavigatePage) onNavigatePage('girl');
+                    } else if (tab === 'ACCESSORIES') {
+                      setActiveTab(null);
+                      if (onNavigatePage) onNavigatePage('accessories');
+                    } else if (tab === 'COLLECTION') {
+                      setActiveTab(null);
+                      if (onNavigatePage) onNavigatePage('collection');
+                    } else if (tab === 'OCCASIONS') {
+                      setActiveTab(null);
+                      if (onNavigatePage) onNavigatePage('occasions');
+                    } else if (tab === 'SALE') {
+                      setActiveTab(null);
+                      if (onNavigatePage) onNavigatePage('sale');
                     } else {
                       setActiveTab(activeTab === tab ? null : tab);
                     }
@@ -353,6 +371,16 @@ export const Header: React.FC<HeaderProps> = ({
 
                       {tab === 'COLLECTION' && (
                         <div className="space-y-4 pt-2">
+                          <button
+                            onClick={() => {
+                              setMobileMenuOpen(false);
+                              if (onNavigatePage) onNavigatePage('collection');
+                            }}
+                            className="w-full text-left font-bold text-[#142B6F] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
+                          >
+                            <span>Explore All Boota Collections</span>
+                            <span>→</span>
+                          </button>
                           <div>
                             <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
                               Boota Desi
@@ -390,6 +418,16 @@ export const Header: React.FC<HeaderProps> = ({
 
                       {tab === 'OCCASIONS' && (
                         <div className="space-y-4 pt-2">
+                          <button
+                            onClick={() => {
+                              setMobileMenuOpen(false);
+                              if (onNavigatePage) onNavigatePage('occasions');
+                            }}
+                            className="w-full text-left font-bold text-[#142B6F] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
+                          >
+                            <span>Explore All Upcoming Occasions</span>
+                            <span>→</span>
+                          </button>
                           <div>
                             <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
                               Baby Ceremonies
@@ -428,6 +466,16 @@ export const Header: React.FC<HeaderProps> = ({
 
                       {tab === 'ACCESSORIES' && (
                         <div className="space-y-4 pt-2">
+                          <button
+                            onClick={() => {
+                              setMobileMenuOpen(false);
+                              if (onNavigatePage) onNavigatePage('accessories');
+                            }}
+                            className="w-full text-left font-bold text-[#142B6F] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
+                          >
+                            <span>Explore All Accessories Collection</span>
+                            <span>→</span>
+                          </button>
                           <div>
                             <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
                               Baby
@@ -455,12 +503,32 @@ export const Header: React.FC<HeaderProps> = ({
 
                       {tab === 'SALE' && (
                         <div className="space-y-4 pt-2">
+                          <button
+                            onClick={() => {
+                              setMobileMenuOpen(false);
+                              if (onNavigatePage) onNavigatePage('sale');
+                            }}
+                            className="w-full text-left font-bold text-[#142B6F] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
+                          >
+                            <span>Explore All Sale Collections</span>
+                            <span>→</span>
+                          </button>
                           <div>
                             <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
                               Sale
                             </h5>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#all-sale" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5 font-medium text-[#962949]">All Sale</a></li>
+                              <li>
+                                <button
+                                  onClick={() => {
+                                    setMobileMenuOpen(false);
+                                    if (onNavigatePage) onNavigatePage('sale');
+                                  }}
+                                  className="hover:text-[#962949] block py-0.5 font-medium text-[#962949] text-left cursor-pointer"
+                                >
+                                  All Sale
+                                </button>
+                              </li>
                               <li><a href="#first-time" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">First Time on Sale</a></li>
                               <li><a href="#special-prices" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Special Prices</a></li>
                             </ul>

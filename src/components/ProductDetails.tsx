@@ -198,7 +198,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
           </span>
         )}
         {discountPercent > 0 && (
-          <span className="text-[14px] font-bold text-[#2E6B4F] tracking-wide">
+          <span className="text-[14px] font-bold text-[#962949] tracking-wide">
             ({discountPercent}% OFF)
           </span>
         )}
@@ -211,8 +211,8 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
 
       {/* Stock status: READY TO SHIP */}
       <div className="mb-6">
-        <span className="inline-flex items-center px-3 py-1 rounded-[4px] bg-[#EBF7EE] text-[#2E6B4F] text-[12px] font-bold uppercase tracking-[0.06em]">
-          <span className="w-2 h-2 rounded-full bg-[#2E6B4F] mr-1.5 animate-pulse" />
+        <span className="inline-flex items-center px-3 py-1 rounded-[4px] bg-[#962949]/10 text-[#962949] text-[12px] font-bold uppercase tracking-[0.06em]">
+          <span className="w-2 h-2 rounded-full bg-[#962949] mr-1.5 animate-pulse" />
           READY TO SHIP
         </span>
       </div>
@@ -303,8 +303,8 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
           >
             {copiedCoupon ? (
               <>
-                <Check className="w-3 h-3 text-[#2E6B4F]" />
-                <span className="text-[#2E6B4F]">Copied</span>
+                <Check className="w-3 h-3 text-[#962949]" />
+                <span className="text-[#962949]">Copied</span>
               </>
             ) : (
               <>
@@ -395,14 +395,14 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
           <div className="mt-3.5 pt-3 border-t border-[#E8DADD]/80 text-[13px]">
             {pincodeStatus.valid ? (
               <div className="space-y-1.5 text-[#2B2224]">
-                <div className="flex items-center space-x-1.5 text-[#2E6B4F] font-semibold">
+                <div className="flex items-center space-x-1.5 text-[#962949] font-semibold">
                   <CheckCircle2 className="w-4 h-4 shrink-0" />
                   <span>Delivery available for {pincodeStatus.code}</span>
                 </div>
                 <div className="text-[13px] pl-5">
                   Expected Delivery: <strong className="text-[#2B2224] font-bold">{pincodeStatus.deliveryDate}</strong>
                 </div>
-                <div className="text-[12.5px] pl-5 text-[#2E6B4F] font-medium">
+                <div className="text-[12.5px] pl-5 text-[#962949] font-medium">
                   ✓ Cash on Delivery (COD) is available
                 </div>
               </div>

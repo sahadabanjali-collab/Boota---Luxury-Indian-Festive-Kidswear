@@ -262,7 +262,7 @@ export const AdminProductSettingsModal: React.FC<AdminProductSettingsModalProps>
           {/* Modal Footer with Save Button */}
           <div className="pt-4 border-t border-[#E8DADD] flex items-center justify-between">
             {savedSuccess ? (
-              <span className="text-[13px] font-bold text-[#2E6B4F] flex items-center gap-1.5">
+              <span className="text-[13px] font-bold text-[#962949] flex items-center gap-1.5">
                 <Check className="w-4 h-4" />
                 Settings saved successfully!
               </span>

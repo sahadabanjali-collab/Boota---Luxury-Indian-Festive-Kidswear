@@ -852,9 +852,9 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
         </div>
       </div>
 
-      {/* Main Header Title matching video: "upcoming occasions" in navy serif lowercase */}
+      {/* Main Header Title matching video: "upcoming occasions" in Boota maroon serif lowercase */}
       <div className="pt-6 sm:pt-8 pb-3 text-center px-4">
-        <h1 className="font-serif text-[38px] sm:text-[46px] md:text-[54px] font-bold text-[#142B6F] tracking-tight leading-none lowercase">
+        <h1 className="font-serif text-[38px] sm:text-[46px] md:text-[54px] font-bold text-[#962949] tracking-tight leading-none lowercase">
           upcoming occasions
         </h1>
       </div>
@@ -875,8 +875,8 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                 <div
                   className={`w-18 h-18 sm:w-22 sm:h-22 md:w-24 md:h-24 rounded-full overflow-hidden border-2 transition-all duration-200 p-0.5 ${
                     isSelected
-                      ? 'border-[#142B6F] ring-2 ring-[#142B6F]/20 scale-105 shadow-sm'
-                      : 'border-[#E8DADD] hover:border-[#142B6F]/60'
+                      ? 'border-[#962949] ring-2 ring-[#962949]/20 scale-105 shadow-sm'
+                      : 'border-[#E8DADD] hover:border-[#962949]/60'
                   }`}
                 >
                   <img
@@ -889,7 +889,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                 {/* Category Label */}
                 <span
                   className={`mt-2 text-[11px] sm:text-[12px] md:text-[12.5px] font-bold tracking-wider uppercase text-center transition-colors max-w-[110px] leading-tight ${
-                    isSelected ? 'text-[#142B6F]' : 'text-[#2B2224] group-hover:text-[#142B6F]'
+                    isSelected ? 'text-[#962949]' : 'text-[#2B2224] group-hover:text-[#962949]'
                   }`}
                 >
                   {bubble.label}
@@ -903,7 +903,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
       {/* Active Filter Pill when filtered */}
       {selectedFilter !== 'all' && (
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 mb-8 flex items-center justify-between">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#142B6F]/10 text-[#142B6F] text-[13px] font-semibold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#962949]/10 text-[#962949] text-[13px] font-semibold">
             <span>
               Viewing{' '}
               {occasionBubbles.find((b) => b.id === selectedFilter)?.label ||
@@ -959,7 +959,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                     <button
                       type="button"
                       onClick={() => handleBubbleClick('ganesh-chaturthi')}
-                      className="px-5 py-2.5 bg-[#142B6F] hover:bg-[#1a3891] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2.5 bg-[#962949] hover:bg-[#7D223C] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>VIEW ALL</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -1030,7 +1030,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                         <div className="pt-2 pb-1 flex flex-col justify-between flex-1">
                           <h4
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h4>
@@ -1051,7 +1051,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-3.5 h-3.5" />
@@ -1096,7 +1096,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                     <button
                       type="button"
                       onClick={() => handleBubbleClick('navratri')}
-                      className="px-5 py-2.5 bg-[#142B6F] hover:bg-[#1a3891] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2.5 bg-[#962949] hover:bg-[#7D223C] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>VIEW ALL</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -1139,13 +1139,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                           {/* Badge */}
                           {product.badge && (
                             <div className="absolute top-2 left-2 pointer-events-none">
-                              <span
-                                className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white shadow-2xs ${
-                                  product.badge.toLowerCase().includes('sale')
-                                    ? 'bg-[#E11D48]'
-                                    : 'bg-[#962949]'
-                                }`}
-                              >
+                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white shadow-2xs bg-[#962949]">
                                 {product.badge}
                               </span>
                             </div>
@@ -1173,7 +1167,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                         <div className="pt-2 pb-1 flex flex-col justify-between flex-1">
                           <h4
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h4>
@@ -1194,7 +1188,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-3.5 h-3.5" />
@@ -1239,7 +1233,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                     <button
                       type="button"
                       onClick={() => handleBubbleClick('diwali')}
-                      className="px-5 py-2.5 bg-[#142B6F] hover:bg-[#1a3891] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2.5 bg-[#962949] hover:bg-[#7D223C] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>VIEW ALL</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -1282,7 +1276,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                           {/* Badge */}
                           {product.badge && (
                             <div className="absolute top-2 left-2 pointer-events-none">
-                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#142B6F] shadow-2xs">
+                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#962949] shadow-2xs">
                                 {product.badge}
                               </span>
                             </div>
@@ -1310,7 +1304,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                         <div className="pt-2 pb-1 flex flex-col justify-between flex-1">
                           <h4
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h4>
@@ -1331,7 +1325,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-3.5 h-3.5" />
@@ -1376,7 +1370,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                     <button
                       type="button"
                       onClick={() => handleBubbleClick('baby-ceremonies')}
-                      className="px-5 py-2.5 bg-[#142B6F] hover:bg-[#1a3891] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2.5 bg-[#962949] hover:bg-[#7D223C] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>VIEW ALL</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -1419,7 +1413,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                           {/* Badge */}
                           {product.badge && (
                             <div className="absolute top-2 left-2 pointer-events-none">
-                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#2E6B4F] shadow-2xs">
+                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#962949] shadow-2xs">
                                 {product.badge}
                               </span>
                             </div>
@@ -1447,7 +1441,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                         <div className="pt-2 pb-1 flex flex-col justify-between flex-1">
                           <h4
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h4>
@@ -1468,7 +1462,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-3.5 h-3.5" />

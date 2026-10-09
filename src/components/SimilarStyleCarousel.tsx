@@ -100,7 +100,7 @@ export const SimilarStyleCarousel: React.FC<SimilarStyleCarouselProps> = ({
                 />
 
                 {item.badge && (
-                  <span className="absolute top-2 left-2 px-2 py-0.5 bg-white/90 text-[#962949] text-[10.5px] font-bold uppercase tracking-wider rounded-[2px] shadow-xs">
+                  <span className="absolute top-2 left-2 px-2 py-0.5 bg-[#962949] text-white text-[10px] sm:text-[10.5px] font-bold uppercase tracking-wider rounded-[3px] shadow-2xs">
                     {item.badge}
                   </span>
                 )}

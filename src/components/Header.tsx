@@ -64,11 +64,12 @@ export const Header: React.FC<HeaderProps> = ({
     setOpenMobileAccordion((prev) => (prev === tab ? null : tab));
   };
 
-  const handleItemClick = (e: React.MouseEvent, category?: string) => {
-    e.preventDefault();
+  const handleMobileNavigate = (page: string, category?: string) => {
     setMobileMenuOpen(false);
     if (category && onSelectCategory) {
       onSelectCategory(category);
+    } else if (onNavigatePage) {
+      onNavigatePage(page);
     }
   };
 
@@ -291,20 +292,36 @@ export const Header: React.FC<HeaderProps> = ({
 
             {navTabs.map((tab) => {
               const isOpen = openMobileAccordion === tab;
-              const isSale = tab === 'SALE';
+              const isTabActive =
+                (tab === 'GIRL' && currentView === 'girl') ||
+                (tab === 'ACCESSORIES' && currentView === 'accessories') ||
+                (tab === 'COLLECTION' && currentView === 'collection') ||
+                (tab === 'OCCASIONS' && (currentView === 'occasions' || (currentView as string) === 'occasion')) ||
+                (tab === 'SALE' && currentView === 'sale');
 
               return (
                 <div key={tab} className="w-full">
                   <button
                     onClick={() => toggleMobileAccordion(tab)}
-                    className="w-full py-4 px-6 flex items-center justify-between text-left cursor-pointer transition-colors"
+                    className={`w-full py-4 px-6 flex items-center justify-between text-left cursor-pointer transition-colors ${
+                      isTabActive
+                        ? 'text-[#962949] font-semibold bg-[#FFF9FA]'
+                        : 'text-[#2B2224] hover:text-[#962949]'
+                    }`}
                   >
-                    <span className="text-[14.5px] font-medium tracking-[0.05em] uppercase text-[#000000]">
+                    <span className="text-[14.5px] font-medium tracking-[0.05em] uppercase">
                       {tab}
                     </span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 text-[#000000] ${isOpen ? 'rotate-180' : ''}`}
-                    />
+                    <div className="flex items-center gap-2">
+                      {isTabActive && (
+                        <span className="w-2 h-2 rounded-full bg-[#962949]" />
+                      )}
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          isOpen ? 'rotate-180 text-[#962949]' : 'text-[#6F6265]'
+                        }`}
+                      />
+                    </div>
                   </button>
 
                   {/* Accordion Content with details filled from Desktop Screenshots */}
@@ -313,57 +330,175 @@ export const Header: React.FC<HeaderProps> = ({
                       {tab === 'GIRL' && (
                         <div className="space-y-4 pt-2">
                           <button
-                            onClick={() => {
-                              setMobileMenuOpen(false);
-                              if (onNavigatePage) onNavigatePage('girl');
-                            }}
-                            className="w-full text-left font-bold text-[#142B6F] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
+                            type="button"
+                            onClick={() => handleMobileNavigate('girl')}
+                            className="w-full text-left font-bold text-[#962949] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
                           >
                             <span>Explore All Girls Collection</span>
                             <span>→</span>
                           </button>
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('girl')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Boota Desi
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#suit-sets" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Suit Sets</a></li>
-                              <li><a href="#lehenga-sets" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Lehenga Sets</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('girl', 'Suit Sets')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Suit Sets
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('girl', 'Lehenga Sets')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Lehenga Sets
+                                </button>
+                              </li>
                             </ul>
                           </div>
 
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('girl')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Boota Play
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#dresses" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Dresses</a></li>
-                              <li><a href="#top-sets" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Top Sets</a></li>
-                              <li><a href="#tops" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Tops</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('girl', 'Dresses')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Dresses
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('girl', 'Top Sets')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Top Sets
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('girl', 'Tops')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Tops
+                                </button>
+                              </li>
                             </ul>
                           </div>
 
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('girl')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Shop by Age
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#baby-age" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Baby (0-12 months)</a></li>
-                              <li><a href="#toddler-age" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Toddler (1-3 years)</a></li>
-                              <li><a href="#kids-age" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Kids (3+ years)</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('girl', '0-12M')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Baby (0-12 months)
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('girl', '1-3Y')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Toddler (1-3 years)
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('girl', '3Y+')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Kids (3+ years)
+                                </button>
+                              </li>
                             </ul>
                           </div>
 
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('accessories')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Accessories
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#hair-acc" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Hair Accessories</a></li>
-                              <li><a href="#bangles" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Bangles</a></li>
-                              <li><a href="#jewellery" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Jewellery</a></li>
-                              <li><a href="#bags" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Bags</a></li>
-                              <li><a href="#sale" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5 text-[#962949] font-medium">Sale</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('accessories')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Hair Accessories
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('accessories')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Bangles
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('accessories')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Jewellery
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('accessories')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Bags
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('sale', 'all sale')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer text-[#962949] font-medium transition-colors"
+                                >
+                                  Sale
+                                </button>
+                              </li>
                             </ul>
                           </div>
                         </div>
@@ -372,45 +507,127 @@ export const Header: React.FC<HeaderProps> = ({
                       {tab === 'COLLECTION' && (
                         <div className="space-y-4 pt-2">
                           <button
-                            onClick={() => {
-                              setMobileMenuOpen(false);
-                              if (onNavigatePage) onNavigatePage('collection');
-                            }}
-                            className="w-full text-left font-bold text-[#142B6F] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
+                            type="button"
+                            onClick={() => handleMobileNavigate('collection', 'collection')}
+                            className="w-full text-left font-bold text-[#962949] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
                           >
                             <span>Explore All Boota Collections</span>
                             <span>→</span>
                           </button>
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('collection', 'boota desi')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Boota Desi
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#suit-sets" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Suit Sets</a></li>
-                              <li><a href="#lehenga-sets" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Lehenga Sets</a></li>
-                              <li><a href="#sharara-sets" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Sharara Sets</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('collection', 'boota desi')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Suit Sets
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('collection', 'boota desi')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Lehenga Sets
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('collection', 'boota desi')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Sharara Sets
+                                </button>
+                              </li>
                             </ul>
                           </div>
 
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('collection', 'boota play')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Boota Play
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#dresses" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Dresses</a></li>
-                              <li><a href="#top-sets" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Top Sets</a></li>
-                              <li><a href="#co-ords" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Co-ords</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('collection', 'boota play')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Dresses
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('collection', 'boota play')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Top Sets
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('collection', 'boota play')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Co-ords
+                                </button>
+                              </li>
                             </ul>
                           </div>
 
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('collection', 'boota luxe')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Boota Luxe
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#festive-lehengas" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Festive Lehengas</a></li>
-                              <li><a href="#occasion-sets" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Occasion Sets</a></li>
-                              <li><a href="#silk-edit" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5 font-medium text-[#962949]">Silk Edit</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('collection', 'boota luxe')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Festive Lehengas
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('collection', 'boota luxe')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Occasion Sets
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('collection', 'boota luxe')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer font-medium text-[#962949] transition-colors"
+                                >
+                                  Silk Edit
+                                </button>
+                              </li>
                             </ul>
                           </div>
                         </div>
@@ -419,46 +636,136 @@ export const Header: React.FC<HeaderProps> = ({
                       {tab === 'OCCASIONS' && (
                         <div className="space-y-4 pt-2">
                           <button
-                            onClick={() => {
-                              setMobileMenuOpen(false);
-                              if (onNavigatePage) onNavigatePage('occasions');
-                            }}
-                            className="w-full text-left font-bold text-[#142B6F] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
+                            type="button"
+                            onClick={() => handleMobileNavigate('occasions', 'occasions')}
+                            className="w-full text-left font-bold text-[#962949] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
                           >
                             <span>Explore All Upcoming Occasions</span>
                             <span>→</span>
                           </button>
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('occasions', 'baby ceremonies')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Baby Ceremonies
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#baby-welcome" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Baby Welcome &amp; Naming</a></li>
-                              <li><a href="#mundan" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Head Shave: Mundan</a></li>
-                              <li><a href="#annaprashan" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">First Food: Annaprashan</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('occasions', 'baby welcome')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Baby Welcome &amp; Naming
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('occasions', 'mundan')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Head Shave: Mundan
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('occasions', 'annaprashan')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  First Food: Annaprashan
+                                </button>
+                              </li>
                             </ul>
                           </div>
 
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('occasions', 'occasions')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Upcoming Occasions
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#ganesh-chaturthi" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Ganesh Chaturthi</a></li>
-                              <li><a href="#navratri" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Navratri &amp; Durga Puja</a></li>
-                              <li><a href="#diwali" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5 font-medium text-[#962949]">Diwali</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('occasions', 'ganesh chaturthi')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Ganesh Chaturthi
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('occasions', 'navratri')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Navratri &amp; Durga Puja
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('occasions', 'diwali')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer font-medium text-[#962949] transition-colors"
+                                >
+                                  Diwali
+                                </button>
+                              </li>
                             </ul>
                           </div>
 
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('occasions', 'wedding')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Wedding
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#mehendi" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Mehendi</a></li>
-                              <li><a href="#haldi" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Haldi</a></li>
-                              <li><a href="#sangeet" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Sangeet</a></li>
-                              <li><a href="#wedding" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5 font-medium text-[#962949]">Wedding</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('occasions', 'mehendi')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Mehendi
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('occasions', 'haldi')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Haldi
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('occasions', 'sangeet')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Sangeet
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('occasions', 'wedding')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer font-medium text-[#962949] transition-colors"
+                                >
+                                  Wedding
+                                </button>
+                              </li>
                             </ul>
                           </div>
                         </div>
@@ -467,35 +774,97 @@ export const Header: React.FC<HeaderProps> = ({
                       {tab === 'ACCESSORIES' && (
                         <div className="space-y-4 pt-2">
                           <button
-                            onClick={() => {
-                              setMobileMenuOpen(false);
-                              if (onNavigatePage) onNavigatePage('accessories');
-                            }}
-                            className="w-full text-left font-bold text-[#142B6F] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
+                            type="button"
+                            onClick={() => handleMobileNavigate('accessories')}
+                            className="w-full text-left font-bold text-[#962949] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
                           >
                             <span>Explore All Accessories Collection</span>
                             <span>→</span>
                           </button>
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('accessories')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Baby
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#swaddles" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Swaddles</a></li>
-                              <li><a href="#pillows" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Mustard Seed Pillows</a></li>
-                              <li><a href="#toys" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Toys</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('accessories')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Swaddles
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('accessories')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Mustard Seed Pillows
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('accessories')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Toys
+                                </button>
+                              </li>
                             </ul>
                           </div>
 
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('accessories')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Girl
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
-                              <li><a href="#hair-accessories" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Hair Accessories</a></li>
-                              <li><a href="#bags" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Bags</a></li>
-                              <li><a href="#bangles" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Bangles</a></li>
-                              <li><a href="#jewellery" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Jewellery</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('accessories')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Hair Accessories
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('accessories')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Bags
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('accessories')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Bangles
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('accessories')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Jewellery
+                                </button>
+                              </li>
                             </ul>
                           </div>
                         </div>
@@ -504,33 +873,49 @@ export const Header: React.FC<HeaderProps> = ({
                       {tab === 'SALE' && (
                         <div className="space-y-4 pt-2">
                           <button
-                            onClick={() => {
-                              setMobileMenuOpen(false);
-                              if (onNavigatePage) onNavigatePage('sale');
-                            }}
-                            className="w-full text-left font-bold text-[#142B6F] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
+                            type="button"
+                            onClick={() => handleMobileNavigate('sale', 'all sale')}
+                            className="w-full text-left font-bold text-[#962949] text-[13.5px] py-1 border-b border-[#E8DADD] flex items-center justify-between cursor-pointer"
                           >
                             <span>Explore All Sale Collections</span>
                             <span>→</span>
                           </button>
                           <div>
-                            <h5 className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMobileNavigate('sale', 'all sale')}
+                              className="font-serif font-semibold text-[15px] text-[#962949] mb-1.5 text-left w-full cursor-pointer hover:underline"
+                            >
                               Sale
-                            </h5>
+                            </button>
                             <ul className="space-y-1.5 pl-1 text-[#6F6265]">
                               <li>
                                 <button
-                                  onClick={() => {
-                                    setMobileMenuOpen(false);
-                                    if (onNavigatePage) onNavigatePage('sale');
-                                  }}
-                                  className="hover:text-[#962949] block py-0.5 font-medium text-[#962949] text-left cursor-pointer"
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('sale', 'all sale')}
+                                  className="hover:text-[#962949] block py-0.5 font-medium text-[#962949] text-left w-full cursor-pointer transition-colors"
                                 >
                                   All Sale
                                 </button>
                               </li>
-                              <li><a href="#first-time" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">First Time on Sale</a></li>
-                              <li><a href="#special-prices" onClick={handleItemClick} className="hover:text-[#962949] block py-0.5">Special Prices</a></li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('sale', 'first time on sale')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  First Time on Sale
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMobileNavigate('sale', 'special prices')}
+                                  className="hover:text-[#962949] block py-0.5 text-left w-full cursor-pointer transition-colors"
+                                >
+                                  Special Prices
+                                </button>
+                              </li>
                             </ul>
                           </div>
                         </div>

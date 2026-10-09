@@ -100,6 +100,7 @@ export default function App() {
   const [collectionFilter, setCollectionFilter] = useState<'all' | 'desi' | 'play' | 'luxe'>('all');
   const [occasionFilter, setOccasionFilter] = useState<string>('all');
   const [saleFilter, setSaleFilter] = useState<string>('all');
+  const [girlAge, setGirlAge] = useState<string>('');
 
   // Customer Account & Orders State
   const [userProfile, setUserProfile] = useState<UserProfile>(getStoredUserProfile);
@@ -312,18 +313,57 @@ export default function App() {
       'size-guide',
       'returns',
     ];
-    let target = page.toLowerCase().replace('#', '') as AppView;
-    if (target === ('girls' as any)) target = 'girl';
-    if (target === ('collections' as any)) target = 'collection';
-    if (target === ('accessory' as any) || target === ('acc' as any)) target = 'accessories';
-    if (target === ('occasion' as any)) target = 'occasions';
-    if (target === ('sales' as any)) target = 'sale';
-    if (target === ('contact-us' as any)) target = 'contact';
-    if (target === ('return' as any) || target === ('returns-exchanges' as any)) target = 'returns';
+    let target: string = page.toLowerCase().replace('#', '').trim();
+    if (target === 'girls') target = 'girl';
+    if (target === 'collections') target = 'collection';
+    if (target === 'accessory' || target === 'acc') target = 'accessories';
+    if (target === 'occasion') target = 'occasions';
+    if (target === 'sales') target = 'sale';
+    if (target === 'contact-us') target = 'contact';
+    if (target === 'return' || target === 'returns-exchanges') target = 'returns';
 
-    if (validPages.includes(target)) {
-      setCurrentView(target);
+    // Route category hashes from mobile directly to the proper page
+    if (
+      [
+        'lehenga-sets',
+        'suit-sets',
+        'sharara-sets',
+        'anarkalis',
+        'anarkali-sets',
+        'dresses',
+        'tops',
+        'top-sets',
+        'baby-age',
+        'toddler-age',
+        'kids-age',
+      ].includes(target)
+    ) {
+      setCurrentView('girl');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.location.hash) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+      return;
+    }
+
+    if (['boota-desi', 'boota-play', 'boota-luxe'].includes(target)) {
+      if (target === 'boota-desi') setCollectionFilter('desi');
+      if (target === 'boota-play') setCollectionFilter('play');
+      if (target === 'boota-luxe') setCollectionFilter('luxe');
+      setCurrentView('collection');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.location.hash) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+      return;
+    }
+
+    if (validPages.includes(target as AppView)) {
+      setCurrentView(target as AppView);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.location.hash) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
     }
   };
 
@@ -371,106 +411,157 @@ export default function App() {
         }}
         onNavigatePage={handleNavigatePage}
         onSelectCategory={(cat) => {
-          if (cat.toLowerCase() === 'girl' || cat.toLowerCase() === 'girls') {
+          const lower = cat.toLowerCase().trim();
+          if (lower === 'girl' || lower === 'girls') {
             handleNavigatePage('girl');
             return;
           }
-          if (cat.toLowerCase() === 'collection' || cat.toLowerCase() === 'collections') {
+          if (lower === '0-12m' || lower.includes('0-12') || lower.includes('baby (0-12')) {
+            setGirlAge('0-12M');
+            handleNavigatePage('girl');
+            return;
+          }
+          if (lower === '1-3y' || lower.includes('1-3') || lower.includes('toddler (1-3')) {
+            setGirlAge('1-3Y');
+            handleNavigatePage('girl');
+            return;
+          }
+          if (lower === '3y+' || lower.includes('3+') || lower.includes('kids (3+')) {
+            setGirlAge('3Y+');
+            handleNavigatePage('girl');
+            return;
+          }
+          if (lower === 'collection' || lower === 'collections') {
             setCollectionFilter('all');
             handleNavigatePage('collection');
             return;
           }
-          if (cat.toLowerCase() === 'accessories' || cat.toLowerCase() === 'accessory') {
+          if (lower.includes('desi')) {
+            setCollectionFilter('desi');
+            handleNavigatePage('collection');
+            return;
+          }
+          if (lower.includes('play')) {
+            setCollectionFilter('play');
+            handleNavigatePage('collection');
+            return;
+          }
+          if (lower.includes('luxe')) {
+            setCollectionFilter('luxe');
+            handleNavigatePage('collection');
+            return;
+          }
+          if (
+            lower === 'accessories' ||
+            lower === 'accessory' ||
+            lower.includes('swaddle') ||
+            lower.includes('pillow') ||
+            lower.includes('toy') ||
+            lower.includes('hair') ||
+            lower.includes('bangle') ||
+            lower.includes('jewel') ||
+            lower.includes('bag')
+          ) {
             handleNavigatePage('accessories');
             return;
           }
-          if (cat.toLowerCase() === 'occasions' || cat.toLowerCase() === 'occasion') {
+          if (lower === 'occasions' || lower === 'occasion') {
             setOccasionFilter('all');
             handleNavigatePage('occasions');
             return;
           }
-          if (cat.toLowerCase() === 'sale' || cat.toLowerCase() === 'all sale') {
-            setSaleFilter('all');
-            handleNavigatePage('sale');
-            return;
-          }
-          if (cat.toLowerCase().includes('sale') && cat.toLowerCase().includes('desi')) {
-            setSaleFilter('desi');
-            handleNavigatePage('sale');
-            return;
-          }
-          if (cat.toLowerCase().includes('sale') && cat.toLowerCase().includes('play')) {
-            setSaleFilter('play');
-            handleNavigatePage('sale');
-            return;
-          }
-          if (cat.toLowerCase().includes('sale') && cat.toLowerCase().includes('luxe')) {
-            setSaleFilter('luxe');
-            handleNavigatePage('sale');
-            return;
-          }
-          if (
-            cat.toLowerCase().includes('special offer') ||
-            cat.toLowerCase().includes('special prices') ||
-            cat.toLowerCase().includes('last chance') ||
-            cat.toLowerCase().includes('first time on sale')
-          ) {
-            setSaleFilter('special');
-            handleNavigatePage('sale');
-            return;
-          }
-          if (cat.toLowerCase().includes('ganesh') || cat.toLowerCase().includes('ganpati')) {
+          if (lower.includes('ganesh') || lower.includes('ganpati')) {
             setOccasionFilter('ganesh-chaturthi');
             handleNavigatePage('occasions');
             return;
           }
-          if (cat.toLowerCase().includes('navratri') || cat.toLowerCase().includes('durga')) {
+          if (lower.includes('navratri') || lower.includes('durga')) {
             setOccasionFilter('navratri');
             handleNavigatePage('occasions');
             return;
           }
-          if (cat.toLowerCase().includes('diwali') || cat.toLowerCase().includes('dussehra')) {
+          if (lower.includes('diwali') || lower.includes('dussehra')) {
             setOccasionFilter('diwali');
             handleNavigatePage('occasions');
             return;
           }
           if (
-            cat.toLowerCase().includes('baby welcome') ||
-            cat.toLowerCase().includes('mundan') ||
-            cat.toLowerCase().includes('annaprashan') ||
-            cat.toLowerCase().includes('baby ceremonies')
+            lower.includes('baby welcome') ||
+            lower.includes('mundan') ||
+            lower.includes('annaprashan') ||
+            lower.includes('baby ceremonies')
           ) {
             setOccasionFilter('baby-ceremonies');
             handleNavigatePage('occasions');
             return;
           }
-          if (cat.toLowerCase() === 'boota desi') {
-            setCollectionFilter('desi');
-            handleNavigatePage('collection');
+          if (
+            lower.includes('wedding') ||
+            lower.includes('mehendi') ||
+            lower.includes('haldi') ||
+            lower.includes('sangeet')
+          ) {
+            setOccasionFilter('wedding');
+            handleNavigatePage('occasions');
             return;
           }
-          if (cat.toLowerCase() === 'boota play') {
-            setCollectionFilter('play');
-            handleNavigatePage('collection');
+          if (lower === 'sale' || lower === 'all sale') {
+            setSaleFilter('all');
+            handleNavigatePage('sale');
             return;
           }
-          if (cat.toLowerCase() === 'boota luxe') {
-            setCollectionFilter('luxe');
-            handleNavigatePage('collection');
+          if (lower.includes('sale') && lower.includes('desi')) {
+            setSaleFilter('desi');
+            handleNavigatePage('sale');
+            return;
+          }
+          if (lower.includes('sale') && lower.includes('play')) {
+            setSaleFilter('play');
+            handleNavigatePage('sale');
+            return;
+          }
+          if (lower.includes('sale') && lower.includes('luxe')) {
+            setSaleFilter('luxe');
+            handleNavigatePage('sale');
+            return;
+          }
+          if (
+            lower.includes('special offer') ||
+            lower.includes('special prices') ||
+            lower.includes('last chance') ||
+            lower.includes('first time on sale') ||
+            lower.includes('special')
+          ) {
+            setSaleFilter('special');
+            handleNavigatePage('sale');
+            return;
+          }
+          if (
+            lower.includes('suit') ||
+            lower.includes('lehenga') ||
+            lower.includes('sharara') ||
+            lower.includes('dress') ||
+            lower.includes('kurti') ||
+            lower.includes('top') ||
+            lower.includes('anarkali')
+          ) {
+            handleNavigatePage('girl');
             return;
           }
           const match = allProducts.find(
             (p) =>
-              p.name.toLowerCase().includes(cat.toLowerCase()) ||
-              p.category.toLowerCase().includes(cat.toLowerCase()) ||
-              p.collection.toLowerCase().includes(cat.toLowerCase())
+              p.name.toLowerCase().includes(lower) ||
+              p.category.toLowerCase().includes(lower) ||
+              p.collection.toLowerCase().includes(lower)
           );
           if (match) {
             setSelectedProduct(match);
+            setCurrentView('pdp');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast(`Viewing ${match?.name}`);
+            return;
           }
-          setCurrentView('pdp');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          showToast(`Viewing ${match?.name || cat}`);
+          handleNavigatePage('girl');
         }}
       />
 

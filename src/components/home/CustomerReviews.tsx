@@ -91,7 +91,7 @@ export const CustomerReviews: React.FC<CustomerReviewsProps> = ({
                   {/* Quote Icon & Verified Badge */}
                   <div className="flex items-center justify-between mb-4">
                     <Quote className="w-7 h-7 text-[#F9D0D6] fill-[#F9D0D6]" />
-                    <div className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-[#EBF7EE] text-[#1E7E34] text-[11px] font-medium">
+                    <div className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-[#962949]/10 text-[#962949] text-[11px] font-medium">
                       <CheckCircle2 className="w-3 h-3 stroke-[2]" />
                       <span>Verified Buyer</span>
                     </div>

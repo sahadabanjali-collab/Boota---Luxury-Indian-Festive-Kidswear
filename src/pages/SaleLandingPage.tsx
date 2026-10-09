@@ -851,9 +851,9 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
         </div>
       </div>
 
-      {/* Main Header Title matching video: "sale" in navy serif lowercase */}
+      {/* Main Header Title matching video: "sale" in boota maroon serif lowercase */}
       <div className="pt-6 sm:pt-8 pb-3 text-center px-4">
-        <h1 className="font-serif text-[38px] sm:text-[46px] md:text-[54px] font-bold text-[#142B6F] tracking-tight leading-none lowercase">
+        <h1 className="font-serif text-[38px] sm:text-[46px] md:text-[54px] font-bold text-[#962949] tracking-tight leading-none lowercase">
           sale
         </h1>
         <p className="text-[13.5px] sm:text-[14.5px] text-[#6F6265] max-w-xl mx-auto mt-2">
@@ -877,8 +877,8 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                 <div
                   className={`w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 rounded-full overflow-hidden border-2 transition-all duration-200 p-0.5 ${
                     isSelected
-                      ? 'border-[#142B6F] ring-2 ring-[#142B6F]/20 scale-105 shadow-sm'
-                      : 'border-[#E8DADD] hover:border-[#142B6F]/60'
+                      ? 'border-[#962949] ring-2 ring-[#962949]/20 scale-105 shadow-sm'
+                      : 'border-[#E8DADD] hover:border-[#962949]/60'
                   }`}
                 >
                   <img
@@ -891,7 +891,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                 {/* Uppercase Category Label */}
                 <span
                   className={`mt-2 text-[11px] sm:text-[12px] font-bold tracking-wider uppercase text-center transition-colors max-w-[110px] leading-tight ${
-                    isSelected ? 'text-[#142B6F]' : 'text-[#2B2224] group-hover:text-[#142B6F]'
+                    isSelected ? 'text-[#962949]' : 'text-[#2B2224] group-hover:text-[#962949]'
                   }`}
                 >
                   {bubble.label}
@@ -910,13 +910,13 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
       {/* Active Filter Pill when filtered */}
       {selectedFilter !== 'all' && (
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 mb-8 flex items-center justify-between">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#142B6F]/10 text-[#142B6F] text-[13px] font-semibold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#962949]/10 text-[#962949] text-[13px] font-semibold">
             <span>
               Viewing {saleBubbles.find((b) => b.id === selectedFilter)?.label || 'Filtered Sale'} only
             </span>
             <button
               onClick={() => setSelectedFilter('all')}
-              className="hover:text-[#962949] p-0.5 rounded-full cursor-pointer ml-1"
+              className="hover:text-[#7A1F3B] p-0.5 rounded-full cursor-pointer ml-1"
               title="Show all sale collections"
             >
               <X className="w-3.5 h-3.5" />
@@ -963,7 +963,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                     <button
                       type="button"
                       onClick={() => handleBubbleClick('desi')}
-                      className="px-5 py-2.5 bg-[#142B6F] hover:bg-[#1a3891] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2.5 bg-[#962949] hover:bg-[#7A1F3B] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>VIEW ALL</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -1006,7 +1006,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                           {/* Badge */}
                           {product.badge && (
                             <div className="absolute top-2 left-2 pointer-events-none">
-                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#142B6F] shadow-2xs">
+                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#962949] shadow-2xs">
                                 {product.badge}
                               </span>
                             </div>
@@ -1034,7 +1034,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                         <div className="pt-2 pb-1 flex flex-col justify-between flex-1">
                           <h4
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h4>
@@ -1055,7 +1055,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-3.5 h-3.5" />
@@ -1100,7 +1100,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                     <button
                       type="button"
                       onClick={() => handleBubbleClick('play')}
-                      className="px-5 py-2.5 bg-[#142B6F] hover:bg-[#1a3891] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2.5 bg-[#962949] hover:bg-[#7A1F3B] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>VIEW ALL</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -1171,7 +1171,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                         <div className="pt-2 pb-1 flex flex-col justify-between flex-1">
                           <h4
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h4>
@@ -1192,7 +1192,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-3.5 h-3.5" />
@@ -1237,7 +1237,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                     <button
                       type="button"
                       onClick={() => handleBubbleClick('luxe')}
-                      className="px-5 py-2.5 bg-[#142B6F] hover:bg-[#1a3891] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2.5 bg-[#962949] hover:bg-[#7A1F3B] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>VIEW ALL</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -1280,7 +1280,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                           {/* Badge */}
                           {product.badge && (
                             <div className="absolute top-2 left-2 pointer-events-none">
-                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#2E6B4F] shadow-2xs">
+                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#962949] shadow-2xs">
                                 {product.badge}
                               </span>
                             </div>
@@ -1308,7 +1308,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                         <div className="pt-2 pb-1 flex flex-col justify-between flex-1">
                           <h4
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h4>
@@ -1329,7 +1329,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-3.5 h-3.5" />
@@ -1374,7 +1374,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                     <button
                       type="button"
                       onClick={() => handleBubbleClick('special')}
-                      className="px-5 py-2.5 bg-[#142B6F] hover:bg-[#1a3891] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2.5 bg-[#962949] hover:bg-[#7A1F3B] text-white text-[12px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>VIEW ALL</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -1445,7 +1445,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                         <div className="pt-2 pb-1 flex flex-col justify-between flex-1">
                           <h4
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h4>
@@ -1466,7 +1466,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-3.5 h-3.5" />

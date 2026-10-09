@@ -228,7 +228,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({
                   onClick={handleCopyLink}
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#FFFDF9] border border-[#E8DADD] hover:border-[#962949] text-[#2B2224] hover:text-[#962949] rounded-[4px] text-[13px] font-medium transition-colors cursor-pointer"
                 >
-                  {copied ? <Check className="w-4 h-4 text-[#2E6B4F]" /> : <Copy className="w-4 h-4" />}
+                  {copied ? <Check className="w-4 h-4 text-[#962949]" /> : <Copy className="w-4 h-4" />}
                   {copied ? 'Link Copied!' : 'Copy Link'}
                 </button>
               </div>

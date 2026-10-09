@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Product, CartItem } from '../types';
 import {
   Heart,
@@ -26,6 +26,7 @@ interface GirlsLandingPageProps {
   onSelectProduct: (product: Product) => void;
   onAddToCart: (product: Product, size?: string) => void;
   onNavigateHome: () => void;
+  initialAge?: string;
 }
 
 // 24 Authentic Girl Ethnic & Indo-Western Styles matching the video catalog
@@ -632,15 +633,31 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
   onSelectProduct,
   onAddToCart,
   onNavigateHome,
+  initialAge,
 }) => {
   const [selectedBubble, setSelectedBubble] = useState<string>('all');
-  const [selectedAges, setSelectedAges] = useState<string[]>([]);
+  const [selectedAges, setSelectedAges] = useState<string[]>(() => {
+    if (initialAge === '0-12M') return ['0-3 Months', '3-6 Months', '6-12 Months'];
+    if (initialAge === '1-3Y') return ['1-2 Yrs', '2-3 Yrs'];
+    if (initialAge === '3Y+') return ['3-4 Yrs', '4-5 Yrs', '5-6 Yrs'];
+    return [];
+  });
   const [selectedGenders, setSelectedGenders] = useState<string[]>(['Girls']);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<string>('best-selling');
   const [showAllAges, setShowAllAges] = useState(false);
   const [showAllColors, setShowAllColors] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
+  useEffect(() => {
+    if (initialAge === '0-12M') {
+      setSelectedAges(['0-3 Months', '3-6 Months', '6-12 Months']);
+    } else if (initialAge === '1-3Y') {
+      setSelectedAges(['1-2 Yrs', '2-3 Yrs']);
+    } else if (initialAge === '3Y+') {
+      setSelectedAges(['3-4 Yrs', '4-5 Yrs', '5-6 Yrs']);
+    }
+  }, [initialAge]);
 
   // Combine parent products with catalog items
   const allGirlProducts = useMemo(() => {
@@ -745,7 +762,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
 
       {/* Main Header Title matching video: "all girls" */}
       <div className="pt-6 sm:pt-8 pb-3 text-center px-4">
-        <h1 className="font-serif text-[38px] sm:text-[46px] md:text-[54px] font-bold text-[#142B6F] tracking-tight leading-none lowercase">
+        <h1 className="font-serif text-[38px] sm:text-[46px] md:text-[54px] font-bold text-[#962949] tracking-tight leading-none lowercase">
           all girls
         </h1>
       </div>
@@ -766,8 +783,8 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                 <div
                   className={`w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 rounded-full overflow-hidden border-2 transition-all duration-200 p-0.5 ${
                     isSelected
-                      ? 'border-[#142B6F] ring-2 ring-[#142B6F]/20 scale-105 shadow-sm'
-                      : 'border-[#E8DADD] hover:border-[#142B6F]/60'
+                      ? 'border-[#962949] ring-2 ring-[#962949]/20 scale-105 shadow-sm'
+                      : 'border-[#E8DADD] hover:border-[#962949]/60'
                   }`}
                 >
                   <img
@@ -780,7 +797,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                 {/* Uppercase Category Label */}
                 <span
                   className={`mt-2 text-[11px] sm:text-[12px] font-bold tracking-wider uppercase text-center transition-colors max-w-[100px] leading-tight ${
-                    isSelected ? 'text-[#142B6F]' : 'text-[#2B2224] group-hover:text-[#142B6F]'
+                    isSelected ? 'text-[#962949]' : 'text-[#2B2224] group-hover:text-[#962949]'
                   }`}
                 >
                   {bubble.label}
@@ -798,7 +815,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
           <div className="lg:hidden w-full flex items-center justify-between py-2 border-b border-[#E8DADD]">
             <button
               onClick={() => setMobileFilterOpen(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#142B6F] text-[#142B6F] rounded-[4px] text-[13px] font-semibold"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 border border-[#962949] text-[#962949] rounded-[4px] text-[13px] font-semibold"
             >
               <SlidersHorizontal className="w-4 h-4" />
               <span>Filters {activeFilterCount > 0 && `(${activeFilterCount})`}</span>
@@ -830,7 +847,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                 <button
                   type="button"
                   onClick={handleClearAllFilters}
-                  className="px-2.5 py-0.5 bg-[#142B6F] text-white text-[11px] font-bold rounded-full hover:bg-[#0f2157] transition-colors cursor-pointer flex items-center gap-1"
+                  className="px-2.5 py-0.5 bg-[#962949] text-white text-[11px] font-bold rounded-full hover:bg-[#7D223C] transition-colors cursor-pointer flex items-center gap-1"
                 >
                   <span>Clear all</span>
                   <X className="w-3 h-3" />
@@ -849,14 +866,14 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                   return (
                     <label
                       key={age.label}
-                      className="flex items-center justify-between text-[#55474B] hover:text-[#142B6F] cursor-pointer group py-0.5 select-none"
+                      className="flex items-center justify-between text-[#55474B] hover:text-[#962949] cursor-pointer group py-0.5 select-none"
                     >
                       <div className="flex items-center space-x-2">
                         <input
                           type="checkbox"
                           checked={checked}
                           onChange={() => toggleAgeFilter(age.label)}
-                          className="w-3.5 h-3.5 rounded-xs border-gray-300 text-[#142B6F] focus:ring-0 cursor-pointer accent-[#142B6F]"
+                          className="w-3.5 h-3.5 rounded-xs border-gray-300 text-[#962949] focus:ring-0 cursor-pointer accent-[#962949]"
                         />
                         <span className="text-[12.5px] font-medium">{age.label}</span>
                       </div>
@@ -868,7 +885,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
               <button
                 type="button"
                 onClick={() => setShowAllAges(!showAllAges)}
-                className="mt-2 text-[12px] text-[#142B6F] hover:underline font-semibold cursor-pointer block"
+                className="mt-2 text-[12px] text-[#962949] hover:underline font-semibold cursor-pointer block"
               >
                 {showAllAges ? '- Show less' : '+ Show more'}
               </button>
@@ -886,7 +903,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                 ].map((g) => (
                   <label
                     key={g.label}
-                    className="flex items-center justify-between text-[#55474B] hover:text-[#142B6F] cursor-pointer py-0.5 select-none"
+                    className="flex items-center justify-between text-[#55474B] hover:text-[#962949] cursor-pointer py-0.5 select-none"
                   >
                     <div className="flex items-center space-x-2">
                       <input
@@ -899,7 +916,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                               : [...prev, g.label]
                           );
                         }}
-                        className="w-3.5 h-3.5 rounded-xs border-gray-300 text-[#142B6F] focus:ring-0 cursor-pointer accent-[#142B6F]"
+                        className="w-3.5 h-3.5 rounded-xs border-gray-300 text-[#962949] focus:ring-0 cursor-pointer accent-[#962949]"
                       />
                       <span className="text-[12.5px] font-medium">{g.label}</span>
                     </div>
@@ -920,14 +937,14 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                   return (
                     <label
                       key={col.name}
-                      className="flex items-center justify-between text-[#55474B] hover:text-[#142B6F] cursor-pointer py-0.5 select-none"
+                      className="flex items-center justify-between text-[#55474B] hover:text-[#962949] cursor-pointer py-0.5 select-none"
                     >
                       <div className="flex items-center space-x-2">
                         <input
                           type="checkbox"
                           checked={checked}
                           onChange={() => toggleColorFilter(col.name)}
-                          className="w-3.5 h-3.5 rounded-xs border-gray-300 text-[#142B6F] focus:ring-0 cursor-pointer accent-[#142B6F]"
+                          className="w-3.5 h-3.5 rounded-xs border-gray-300 text-[#962949] focus:ring-0 cursor-pointer accent-[#962949]"
                         />
                         <span
                           className="w-3 h-3 rounded-full border border-gray-300 inline-block shrink-0"
@@ -943,7 +960,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
               <button
                 type="button"
                 onClick={() => setShowAllColors(!showAllColors)}
-                className="mt-2 text-[12px] text-[#142B6F] hover:underline font-semibold cursor-pointer block"
+                className="mt-2 text-[12px] text-[#962949] hover:underline font-semibold cursor-pointer block"
               >
                 {showAllColors ? '- Show less' : '+ Show more'}
               </button>
@@ -1009,7 +1026,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                         <button
                           type="button"
                           onClick={() => setSelectedBubble('GIRLS INDO WESTERN WEAR')}
-                          className="mt-3 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#142B6F] uppercase tracking-wider hover:underline"
+                          className="mt-3 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#962949] uppercase tracking-wider hover:underline"
                         >
                           <span>Explore Collection</span>
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -1047,15 +1064,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                         {/* Top-Left Badge (NEW, SALE, FEW PCS LEFT) */}
                         {product.badge && (
                           <div className="absolute top-2 left-2 pointer-events-none">
-                            <span
-                              className={`px-2 py-0.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider rounded-[3px] text-white shadow-2xs ${
-                                product.badge.toLowerCase().includes('sale')
-                                  ? 'bg-[#142B6F]'
-                                  : product.badge.toLowerCase().includes('few')
-                                  ? 'bg-[#2E6B4F]'
-                                  : 'bg-[#962949]'
-                              }`}
-                            >
+                            <span className="px-2 py-0.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider rounded-[3px] text-white shadow-2xs bg-[#962949]">
                               {product.badge}
                             </span>
                           </div>
@@ -1085,7 +1094,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                           {/* Title */}
                           <h3
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13.5px] sm:text-[14px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13.5px] sm:text-[14px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h3>
@@ -1110,7 +1119,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Shopping Cart"
                               aria-label={`Add ${product.name} to bag`}
                             >
@@ -1126,7 +1135,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                       <div className="col-span-full my-6 bg-[#FAF6F4] rounded-[6px] border border-[#E8DADD] overflow-hidden">
                         <div className="grid grid-cols-1 md:grid-cols-12 items-center">
                           <div className="md:col-span-7 p-6 sm:p-10">
-                            <span className="text-[12px] uppercase font-bold tracking-[0.14em] text-[#142B6F] block mb-2">
+                            <span className="text-[12px] uppercase font-bold tracking-[0.14em] text-[#962949] block mb-2">
                               Explore Collection
                             </span>
                             <h2 className="font-serif text-[32px] sm:text-[40px] text-[#2B2224] font-bold leading-tight mb-3">
@@ -1141,7 +1150,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                                 setSelectedBubble('GIRLS ETHNIC WEAR');
                                 window.scrollTo({ top: 300, behavior: 'smooth' });
                               }}
-                              className="px-6 py-2.5 bg-[#142B6F] text-white hover:bg-[#0f2157] text-[12.5px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-xs"
+                              className="px-6 py-2.5 bg-[#962949] text-white hover:bg-[#7D223C] text-[12.5px] font-bold uppercase tracking-wider rounded-[3px] transition-colors shadow-xs"
                             >
                               View All →
                             </button>
@@ -1170,7 +1179,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                 <button
                   type="button"
                   onClick={handleClearAllFilters}
-                  className="px-5 py-2 bg-[#142B6F] text-white rounded-[4px] text-[13px] font-bold uppercase tracking-wider"
+                  className="px-5 py-2 bg-[#962949] text-white rounded-[4px] text-[13px] font-bold uppercase tracking-wider"
                 >
                   Clear All Filters
                 </button>
@@ -1205,7 +1214,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                         type="checkbox"
                         checked={selectedAges.includes(age.label)}
                         onChange={() => toggleAgeFilter(age.label)}
-                        className="accent-[#142B6F]"
+                        className="accent-[#962949]"
                       />
                       <span>{age.label}</span>
                     </label>
@@ -1223,7 +1232,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                         type="checkbox"
                         checked={selectedColors.includes(col.name)}
                         onChange={() => toggleColorFilter(col.name)}
-                        className="accent-[#142B6F]"
+                        className="accent-[#962949]"
                       />
                       <span>{col.name}</span>
                     </label>
@@ -1241,7 +1250,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
               </button>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="flex-1 py-2 bg-[#142B6F] text-white rounded-[4px] text-[13px] font-bold"
+                className="flex-1 py-2 bg-[#962949] text-white rounded-[4px] text-[13px] font-bold"
               >
                 Apply
               </button>

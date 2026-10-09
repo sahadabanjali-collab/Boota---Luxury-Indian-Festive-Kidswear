@@ -193,7 +193,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </button>
 
               <div className="flex items-center justify-center gap-2 text-[11px] text-[#6F6265] pt-2">
-                <ShieldCheck className="w-4 h-4 text-[#2E6B4F]" />
+                <ShieldCheck className="w-4 h-4 text-[#962949]" />
                 <span>100% Handcrafted • Easy 7-Day Size Exchange</span>
               </div>
             </div>

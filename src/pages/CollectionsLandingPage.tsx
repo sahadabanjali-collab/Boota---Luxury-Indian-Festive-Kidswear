@@ -11,8 +11,11 @@ import {
 import {
   productImages,
   heroFestiveDesktop,
+  heroFestiveMobile,
   heroDesiDesktop,
+  heroDesiMobile,
   heroLuxeDesktop,
+  heroLuxeMobile,
   ageBaby,
   ageToddler,
   ageKids,
@@ -662,7 +665,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
 
       {/* Main Header Title matching video: "all collections" */}
       <div className="pt-6 sm:pt-8 pb-3 text-center px-4">
-        <h1 className="font-serif text-[38px] sm:text-[46px] md:text-[54px] font-bold text-[#142B6F] tracking-tight leading-none lowercase">
+        <h1 className="font-serif text-[38px] sm:text-[46px] md:text-[54px] font-bold text-[#962949] tracking-tight leading-none lowercase">
           all collections
         </h1>
       </div>
@@ -683,8 +686,8 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
                 <div
                   className={`w-18 h-18 sm:w-22 sm:h-22 md:w-24 md:h-24 rounded-full overflow-hidden border-2 transition-all duration-200 p-0.5 ${
                     isSelected
-                      ? 'border-[#142B6F] ring-2 ring-[#142B6F]/20 scale-105 shadow-sm'
-                      : 'border-[#E8DADD] hover:border-[#142B6F]/60'
+                      ? 'border-[#962949] ring-2 ring-[#962949]/20 scale-105 shadow-sm'
+                      : 'border-[#E8DADD] hover:border-[#962949]/60'
                   }`}
                 >
                   <img
@@ -697,7 +700,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
                 {/* Uppercase Category Label */}
                 <span
                   className={`mt-2 text-[12px] sm:text-[13px] font-bold tracking-wider uppercase text-center transition-colors ${
-                    isSelected ? 'text-[#142B6F]' : 'text-[#2B2224] group-hover:text-[#142B6F]'
+                    isSelected ? 'text-[#962949]' : 'text-[#2B2224] group-hover:text-[#962949]'
                   }`}
                 >
                   {bubble.label}
@@ -711,7 +714,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
       {/* Active Filter Pill when filtered */}
       {selectedFilter !== 'all' && (
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 mb-8 flex items-center justify-between">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#142B6F]/10 text-[#142B6F] text-[13px] font-semibold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#962949]/10 text-[#962949] text-[13px] font-semibold">
             <span>Viewing Boota {selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)} only</span>
             <button
               onClick={() => setSelectedFilter('all')}
@@ -753,11 +756,14 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
               {/* Left Feature Vertical Banner */}
               <div className="lg:col-span-4 xl:col-span-3 h-full">
                 <div className="relative rounded-[6px] overflow-hidden border border-[#E8DADD] bg-[#FAF6F4] h-[340px] sm:h-[420px] lg:h-full min-h-[380px] flex flex-col justify-end p-6 group">
-                  <img
-                    src={heroDesiDesktop}
-                    alt="Boota Desi Collection"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
+                  <picture className="absolute inset-0 w-full h-full">
+                    <source media="(max-width: 640px)" srcSet={heroDesiMobile} />
+                    <img
+                      src={heroDesiDesktop}
+                      alt="Boota Desi Collection"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </picture>
                   <div className="absolute inset-0 bg-gradient-to-t from-[#2B2224]/85 via-[#2B2224]/30 to-transparent" />
                   
                   <div className="relative z-10 text-white">
@@ -844,7 +850,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
                         <div className="pt-2 pb-1 flex flex-col justify-between flex-1">
                           <h4
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h4>
@@ -865,7 +871,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-3.5 h-3.5" />
@@ -901,11 +907,14 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
               {/* Left Feature Vertical Banner */}
               <div className="lg:col-span-4 xl:col-span-3 h-full">
                 <div className="relative rounded-[6px] overflow-hidden border border-[#E8DADD] bg-[#FAF6F4] h-[340px] sm:h-[420px] lg:h-full min-h-[380px] flex flex-col justify-end p-6 group">
-                  <img
-                    src={heroFestiveDesktop}
-                    alt="Boota Play Collection"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
+                  <picture className="absolute inset-0 w-full h-full">
+                    <source media="(max-width: 640px)" srcSet={heroFestiveMobile} />
+                    <img
+                      src={heroFestiveDesktop}
+                      alt="Boota Play Collection"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </picture>
                   <div className="absolute inset-0 bg-gradient-to-t from-[#2B2224]/85 via-[#2B2224]/30 to-transparent" />
                   
                   <div className="relative z-10 text-white">
@@ -964,7 +973,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
                           {/* Badge */}
                           {product.badge && (
                             <div className="absolute top-2 left-2 pointer-events-none">
-                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#142B6F] shadow-2xs">
+                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#962949] shadow-2xs">
                                 {product.badge}
                               </span>
                             </div>
@@ -992,7 +1001,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
                         <div className="pt-2 pb-1 flex flex-col justify-between flex-1">
                           <h4
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h4>
@@ -1013,7 +1022,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-3.5 h-3.5" />
@@ -1049,11 +1058,14 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
               {/* Left Feature Vertical Banner */}
               <div className="lg:col-span-4 xl:col-span-3 h-full">
                 <div className="relative rounded-[6px] overflow-hidden border border-[#E8DADD] bg-[#FAF6F4] h-[340px] sm:h-[420px] lg:h-full min-h-[380px] flex flex-col justify-end p-6 group">
-                  <img
-                    src={heroLuxeDesktop}
-                    alt="Boota Luxe Collection"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
+                  <picture className="absolute inset-0 w-full h-full">
+                    <source media="(max-width: 640px)" srcSet={heroLuxeMobile} />
+                    <img
+                      src={heroLuxeDesktop}
+                      alt="Boota Luxe Collection"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </picture>
                   <div className="absolute inset-0 bg-gradient-to-t from-[#2B2224]/85 via-[#2B2224]/30 to-transparent" />
                   
                   <div className="relative z-10 text-white">
@@ -1112,7 +1124,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
                           {/* Badge */}
                           {product.badge && (
                             <div className="absolute top-2 left-2 pointer-events-none">
-                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#2E6B4F] shadow-2xs">
+                              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-[3px] text-white bg-[#962949] shadow-2xs">
                                 {product.badge}
                               </span>
                             </div>
@@ -1140,7 +1152,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
                         <div className="pt-2 pb-1 flex flex-col justify-between flex-1">
                           <h4
                             onClick={() => onSelectProduct(product)}
-                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#142B6F] transition-colors cursor-pointer line-clamp-1"
+                            className="font-sans font-medium text-[13px] sm:text-[13.5px] text-[#2B2224] hover:text-[#962949] transition-colors cursor-pointer line-clamp-1"
                           >
                             {product.name}
                           </h4>
@@ -1161,7 +1173,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
                                 e.stopPropagation();
                                 onAddToCart(product);
                               }}
-                              className="p-1.5 rounded-full bg-[#142B6F]/10 hover:bg-[#142B6F] text-[#142B6F] hover:text-white transition-colors cursor-pointer shadow-2xs"
+                              className="p-1.5 rounded-full bg-[#962949]/10 hover:bg-[#962949] text-[#962949] hover:text-white transition-colors cursor-pointer shadow-2xs"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-3.5 h-3.5" />

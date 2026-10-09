@@ -139,11 +139,11 @@ export const WholesalePage: React.FC<WholesalePageProps> = ({ onNavigateHome }) 
               </p>
 
               {status === 'success' && (
-                <div className="mb-6 p-4 rounded-[4px] bg-[#2E6B4F]/10 border border-[#2E6B4F] flex items-start gap-3 text-[#2E6B4F]">
+                <div className="mb-6 p-4 rounded-[4px] bg-[#962949]/10 border border-[#962949] flex items-start gap-3 text-[#962949]">
                   <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-[14.5px] font-semibold">Enquiry Submitted Successfully</p>
-                    <p className="text-[13px] text-[#2E6B4F]/90 mt-0.5">
+                    <p className="text-[13px] text-[#962949]/90 mt-0.5">
                       Our wholesale team will review your boutique details and share our line-sheet and catalog within 24–48 hours.
                     </p>
                   </div>

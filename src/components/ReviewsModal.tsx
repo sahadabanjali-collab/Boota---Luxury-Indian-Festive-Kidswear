@@ -104,7 +104,7 @@ export const ReviewsModal: React.FC<ReviewsModalProps> = ({ isOpen, onClose }) =
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-[13.5px] text-[#2B2224]">{rev.author}</span>
                     {rev.verified && (
-                      <span className="flex items-center gap-1 text-[11px] text-[#2E6B4F] bg-[#2E6B4F]/10 px-2 py-0.5 rounded-[4px] font-medium">
+                      <span className="flex items-center gap-1 text-[11px] text-[#962949] bg-[#962949]/10 px-2 py-0.5 rounded-[4px] font-medium">
                         <CheckCircle className="w-3 h-3" />
                         Verified Buyer
                       </span>

@@ -29,7 +29,7 @@ interface SaleLandingPageProps {
 // ============================================================================
 // 1. BOOTA DESI SALE PRODUCTS (Handcrafted Heritage Festive Wear on Sale)
 // ============================================================================
-const bootaDesiSaleProducts: Product[] = [
+export const bootaDesiSaleProducts: Product[] = [
   {
     id: 'sale-desi-gulmohar-kurta',
     name: 'Gulmohar Kurta Pyjama Set',
@@ -211,7 +211,7 @@ const bootaDesiSaleProducts: Product[] = [
 // ============================================================================
 // 2. BOOTA PLAY SALE PRODUCTS (Everyday Twirls, Dresses & Easy-care Co-ords)
 // ============================================================================
-const bootaPlaySaleProducts: Product[] = [
+export const bootaPlaySaleProducts: Product[] = [
   {
     id: 'sale-play-roohi-twirl-dress',
     name: 'Roohi Tier Twirl Dress',
@@ -393,7 +393,7 @@ const bootaPlaySaleProducts: Product[] = [
 // ============================================================================
 // 3. BOOTA LUXE SALE PRODUCTS (Pure Chanderi, Handworked Gota Patti & Zari)
 // ============================================================================
-const bootaLuxeSaleProducts: Product[] = [
+export const bootaLuxeSaleProducts: Product[] = [
   {
     id: 'sale-luxe-chandrika-chanderi-lehenga',
     name: 'Chandrika Chanderi Lehenga Set',
@@ -575,7 +575,7 @@ const bootaLuxeSaleProducts: Product[] = [
 // ============================================================================
 // 4. SPECIAL OFFERS & LAST CHANCE (Sibling Sets, Baby Welcome & Archive Reductions)
 // ============================================================================
-const specialOffersProducts: Product[] = [
+export const specialOffersProducts: Product[] = [
   {
     id: 'sale-special-baby-welcome-romper',
     name: 'Heirloom Baby Welcome Romper Set',
@@ -863,7 +863,7 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
 
       {/* Circular Sale Category Bubbles Row matching video */}
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-4 mb-4">
-        <div className="flex items-center justify-center gap-4 sm:gap-7 md:gap-10 overflow-x-auto pb-2 no-scrollbar">
+        <div className="flex items-center justify-start sm:justify-center gap-4 sm:gap-7 md:gap-10 overflow-x-auto pb-2 no-scrollbar px-2">
           {saleBubbles.map((bubble) => {
             const isSelected = selectedFilter === bubble.id;
             return (
@@ -871,13 +871,13 @@ export const SaleLandingPage: React.FC<SaleLandingPageProps> = ({
                 key={bubble.id}
                 type="button"
                 onClick={() => handleBubbleClick(bubble.id)}
-                className="flex flex-col items-center group cursor-pointer shrink-0 focus:outline-hidden"
+                className="flex flex-col items-center group cursor-pointer shrink-0 focus:outline-hidden transition-transform duration-200 active:scale-95"
               >
                 {/* Circular Image with active ring */}
                 <div
-                  className={`w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 rounded-full overflow-hidden border-2 transition-all duration-200 p-0.5 ${
+                  className={`w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 rounded-full overflow-hidden border-2 bg-white transition-all duration-200 p-0.5 shadow-2xs ${
                     isSelected
-                      ? 'border-[#962949] ring-2 ring-[#962949]/20 scale-105 shadow-sm'
+                      ? 'border-[#962949] ring-2 ring-[#962949]/30 scale-105 shadow-sm'
                       : 'border-[#E8DADD] hover:border-[#962949]/60'
                   }`}
                 >

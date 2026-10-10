@@ -4,6 +4,7 @@ import {
   Truck,
   RotateCcw,
   Heart,
+  Share2,
   ChevronDown,
   ChevronUp,
   Tag,
@@ -17,6 +18,7 @@ import {
   Check,
 } from 'lucide-react';
 import { Product } from '../types';
+import { ProductShareModal } from './ProductShareModal';
 
 interface ProductDetailsProps {
   product?: Product | null;
@@ -27,6 +29,8 @@ interface ProductDetailsProps {
   onOpenReviews: () => void;
   onOpenReturnsPolicy?: () => void;
   returnDays?: number;
+  onShowToast?: (message: string) => void;
+  onOpenShare?: () => void;
 }
 
 const defaultSizes = [
@@ -59,6 +63,8 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
   onOpenReviews,
   onOpenReturnsPolicy,
   returnDays = 7,
+  onShowToast,
+  onOpenShare,
 }) => {
   const currentSizes =
     product?.sizes && product.sizes.length > 0 ? product.sizes : defaultSizes;
@@ -66,6 +72,9 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
   const [selectedSize, setSelectedSize] = useState<string>(
     currentSizes[0] || '1-2 Y'
   );
+
+  // Share modal state
+  const [shareOpen, setShareOpen] = useState(false);
 
   // Offers state
   const [copiedCoupon, setCopiedCoupon] = useState(false);
@@ -167,20 +176,33 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
         {productName}
       </h1>
 
-      {/* Ratings / Reviews bar */}
-      <div className="flex items-center gap-2 mb-3">
-        <div className="flex items-center text-amber-500">
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-          ))}
+      {/* Ratings / Reviews bar with Quick Share */}
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center text-amber-500">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+            ))}
+          </div>
+          <button
+            onClick={onOpenReviews}
+            className="text-[13px] text-[#6F6265] hover:text-[#962949] transition-colors underline cursor-pointer"
+          >
+            {product
+              ? `${product.rating} · (${product.reviewCount} customer reviews)`
+              : '5.0 · (42 customer reviews)'}
+          </button>
         </div>
+
         <button
-          onClick={onOpenReviews}
-          className="text-[13px] text-[#6F6265] hover:text-[#962949] transition-colors underline cursor-pointer"
+          type="button"
+          onClick={() => (onOpenShare ? onOpenShare() : setShareOpen(true))}
+          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#E8DADD] hover:border-[#962949] bg-white hover:bg-[#FAF6F4] text-[#6F6265] hover:text-[#962949] text-[12px] font-semibold transition-colors cursor-pointer shadow-2xs"
+          title="Share this product on WhatsApp, Instagram or any app"
+          aria-label="Share product"
         >
-          {product
-            ? `${product.rating} · (${product.reviewCount} customer reviews)`
-            : '5.0 · (42 customer reviews)'}
+          <Share2 className="w-3.5 h-3.5" />
+          <span>Share</span>
         </button>
       </div>
 
@@ -254,12 +276,12 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
         </div>
       </div>
 
-      {/* Action Buttons: Add to Bag and Wishlist SIDE BY SIDE */}
-      <div className="flex items-center gap-3 mb-6">
+      {/* Action Buttons: Add to Bag, Wishlist, and Share */}
+      <div className="flex items-center gap-2 sm:gap-3 mb-6">
         <button
           type="button"
           onClick={handleAdd}
-          className="flex-1 bg-[#962949] hover:bg-[#7D213C] text-white py-3.5 px-6 text-[14px] uppercase font-bold tracking-[0.06em] rounded-[4px] shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer text-center"
+          className="flex-1 bg-[#962949] hover:bg-[#7D213C] text-white py-3.5 px-4 sm:px-6 text-[13.5px] sm:text-[14px] uppercase font-bold tracking-[0.06em] rounded-[4px] shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer text-center"
         >
           Add to Bag
         </button>
@@ -268,20 +290,32 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
           type="button"
           onClick={onToggleWishlist}
           aria-label={isWishlisted ? 'Saved to Wishlist' : 'Save to Wishlist'}
-          className={`flex items-center justify-center gap-2 px-5 py-3.5 border rounded-[4px] text-[13px] font-semibold uppercase tracking-[0.05em] transition-all cursor-pointer shrink-0 ${
+          className={`flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-3.5 border rounded-[4px] text-[13px] font-semibold uppercase tracking-[0.05em] transition-all cursor-pointer shrink-0 ${
             isWishlisted
               ? 'border-[#962949] text-[#962949] bg-[#F9D0D6]/40'
               : 'border-[#E8DADD] text-[#2B2224] hover:border-[#962949] hover:text-[#962949] bg-white'
           }`}
+          title={isWishlisted ? 'Remove from Wishlist' : 'Save to Wishlist'}
         >
           <Heart
             className={`w-4 h-4 ${
               isWishlisted ? 'fill-[#962949] text-[#962949]' : 'text-[#6F6265]'
             }`}
           />
-          <span className="whitespace-nowrap">
-            {isWishlisted ? 'Wishlisted' : 'Save to Wishlist'}
+          <span className="whitespace-nowrap hidden sm:inline">
+            {isWishlisted ? 'Wishlisted' : 'Save'}
           </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => (onOpenShare ? onOpenShare() : setShareOpen(true))}
+          aria-label="Share product on any app"
+          className="flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-3.5 border border-[#E8DADD] hover:border-[#962949] text-[#2B2224] hover:text-[#962949] bg-white rounded-[4px] text-[13px] font-semibold uppercase tracking-[0.05em] transition-all cursor-pointer shrink-0 shadow-2xs"
+          title="Share product with family & friends on any app"
+        >
+          <Share2 className="w-4 h-4 text-[#6F6265]" />
+          <span className="whitespace-nowrap hidden sm:inline">Share</span>
         </button>
       </div>
 
@@ -541,6 +575,14 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({
           )}
         </div>
       </div>
+
+      {/* Share Modal Dialog */}
+      <ProductShareModal
+        isOpen={shareOpen}
+        onClose={() => setShareOpen(false)}
+        product={product}
+        onShowToast={onShowToast}
+      />
     </div>
   );
 };

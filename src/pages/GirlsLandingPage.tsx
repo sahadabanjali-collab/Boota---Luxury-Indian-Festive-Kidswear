@@ -30,7 +30,7 @@ interface GirlsLandingPageProps {
 }
 
 // 24 Authentic Girl Ethnic & Indo-Western Styles matching the video catalog
-const girlCatalogItems: Product[] = [
+export const girlCatalogItems: Product[] = [
   {
     id: 'gulika-suit-set',
     name: 'Gulika Suit Set',
@@ -769,7 +769,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
 
       {/* Circular Quick Category Bubbles Row matching video */}
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-4 mb-4">
-        <div className="flex items-center justify-center gap-4 sm:gap-7 md:gap-10 overflow-x-auto pb-2 no-scrollbar">
+        <div className="flex items-center justify-start sm:justify-center gap-4 sm:gap-7 md:gap-10 overflow-x-auto pb-2 no-scrollbar px-2">
           {categoryBubbles.map((bubble) => {
             const isSelected = selectedBubble === bubble.id;
             return (
@@ -777,13 +777,13 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
                 key={bubble.id}
                 type="button"
                 onClick={() => setSelectedBubble(bubble.id)}
-                className="flex flex-col items-center group cursor-pointer shrink-0 focus:outline-hidden"
+                className="flex flex-col items-center group cursor-pointer shrink-0 focus:outline-hidden transition-transform duration-200 active:scale-95"
               >
                 {/* Circular Image with active ring */}
                 <div
-                  className={`w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 rounded-full overflow-hidden border-2 transition-all duration-200 p-0.5 ${
+                  className={`w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 rounded-full overflow-hidden border-2 bg-white transition-all duration-200 p-0.5 shadow-2xs ${
                     isSelected
-                      ? 'border-[#962949] ring-2 ring-[#962949]/20 scale-105 shadow-sm'
+                      ? 'border-[#962949] ring-2 ring-[#962949]/30 scale-105 shadow-sm'
                       : 'border-[#E8DADD] hover:border-[#962949]/60'
                   }`}
                 >
@@ -796,7 +796,7 @@ export const GirlsLandingPage: React.FC<GirlsLandingPageProps> = ({
 
                 {/* Uppercase Category Label */}
                 <span
-                  className={`mt-2 text-[11px] sm:text-[12px] font-bold tracking-wider uppercase text-center transition-colors max-w-[100px] leading-tight ${
+                  className={`mt-2.5 text-[11px] sm:text-[12px] font-bold tracking-wider uppercase text-center transition-colors max-w-[110px] leading-tight ${
                     isSelected ? 'text-[#962949]' : 'text-[#2B2224] group-hover:text-[#962949]'
                   }`}
                 >

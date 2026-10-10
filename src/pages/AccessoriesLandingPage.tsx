@@ -28,7 +28,7 @@ interface AccessoriesLandingPageProps {
 }
 
 // Full Authentic Accessories Catalog matching the reference video
-const accessoriesCatalogItems: Product[] = [
+export const accessoriesCatalogItems: Product[] = [
   {
     id: 'nayra-floral-pendant',
     name: 'Nayra Floral Pendant',

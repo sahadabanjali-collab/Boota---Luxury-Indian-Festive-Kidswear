@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { AnnouncementBar } from './components/AnnouncementBar';
 import { Header } from './components/Header';
 import { HomePage } from './components/home/HomePage';
@@ -12,12 +12,20 @@ import { ProductDetails } from './components/ProductDetails';
 import { TheDetailsSection } from './components/TheDetailsSection';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
+import { WishlistDrawer } from './components/WishlistDrawer';
+import { ProductShareModal } from './components/ProductShareModal';
 import { ReviewsModal } from './components/ReviewsModal';
 import { SearchModal } from './components/SearchModal';
 import { SizeGuideModal } from './components/SizeGuideModal';
 import { FloatingChat } from './components/FloatingChat';
 import { CartItem, Product, AnnouncementMessage } from './types';
 import { initialAnnouncements, allProducts } from './data/products';
+import {
+  resolveWishlistProducts,
+  findStoreProductById,
+  saveCachedWishlistProducts,
+  getCachedWishlistProducts,
+} from './data/allCatalogProducts';
 import { ArrowLeft, Settings } from 'lucide-react';
 import { BestPairedWith } from './components/BestPairedWith';
 import { SimilarStyleCarousel } from './components/SimilarStyleCarousel';
@@ -115,13 +123,44 @@ export default function App() {
   const [returnModalOpen, setReturnModalOpen] = useState(false);
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
+  const [wishlistIds, setWishlistIds] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('boota_wishlist_ids');
+        if (saved) return JSON.parse(saved);
+      } catch (e) {
+        console.error('Error loading wishlist from storage:', e);
+      }
+    }
+    return [];
+  });
+  const [wishlistOpen, setWishlistOpen] = useState(false);
+  const [accountInitialTab, setAccountInitialTab] = useState<
+    'orders' | 'returns' | 'profile' | 'addresses' | 'wishlist' | 'comms' | 'delete'
+  >('orders');
+  const [productShareOpen, setProductShareOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [reviewsOpen, setReviewsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Sync wishlist IDs to localStorage whenever modified
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('boota_wishlist_ids', JSON.stringify(wishlistIds));
+      } catch (e) {
+        console.error('Error saving wishlist to storage:', e);
+      }
+    }
+  }, [wishlistIds]);
+
+  // Unified resolution of all wishlist items across all product sections & catalogs
+  const resolvedWishlistProducts = useMemo(() => {
+    return resolveWishlistProducts(wishlistIds);
+  }, [wishlistIds]);
 
   // Admin Configurable Return Window & Best Paired With Map
   const [returnDays, setReturnDays] = useState<number>(() => {
@@ -169,13 +208,21 @@ export default function App() {
     }, 3000);
   };
 
-  const handleToggleWishlist = (productId: string) => {
+  const handleToggleWishlist = (productId: string, productParam?: Product) => {
     setWishlistIds((prev) => {
       const exists = prev.includes(productId);
       const updated = exists ? prev.filter((id) => id !== productId) : [...prev, productId];
       showToast(exists ? 'Removed from Wishlist' : 'Saved to your Wishlist');
       return updated;
     });
+
+    const prodToCache = productParam || findStoreProductById(productId);
+    if (prodToCache) {
+      const currentCached = getCachedWishlistProducts();
+      if (!currentCached.some((p) => p.id === prodToCache.id)) {
+        saveCachedWishlistProducts([...currentCached, prodToCache]);
+      }
+    }
   };
 
   const handleSelectProduct = (product: Product) => {
@@ -227,7 +274,10 @@ export default function App() {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const handleOpenAccount = () => {
+  const handleOpenAccount = (
+    tabParam: 'orders' | 'returns' | 'profile' | 'addresses' | 'wishlist' | 'comms' | 'delete' = 'orders'
+  ) => {
+    setAccountInitialTab(tabParam);
     if (userProfile.isLoggedIn) {
       setDashboardOpen(true);
     } else {
@@ -396,13 +446,7 @@ export default function App() {
         wishlistCount={wishlistIds.length}
         currentView={currentView}
         onOpenCart={() => setCartOpen(true)}
-        onOpenWishlist={() =>
-          showToast(
-            wishlistIds.length > 0
-              ? `${wishlistIds.length} item(s) in your Wishlist`
-              : 'Your wishlist is currently empty'
-          )
-        }
+        onOpenWishlist={() => setWishlistOpen(true)}
         onOpenSearch={() => setSearchOpen(true)}
         onOpenAccount={handleOpenAccount}
         onNavigateHome={() => {
@@ -747,43 +791,51 @@ export default function App() {
               <div className="flex items-center justify-between">
                 <nav
                   aria-label="Breadcrumb"
-                  className="flex items-center space-x-2 text-[13px] text-[#6F6265] font-normal"
+                  className="flex items-center space-x-2 text-[13px] text-[#6F6265] font-normal flex-wrap"
                 >
-                  <button
-                    onClick={() => setCurrentView('home')}
-                    className="hover:text-[#962949] transition-colors cursor-pointer"
+                  <a
+                    href="#home"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentView('home');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="hover:text-[#962949] transition-colors cursor-pointer hover:underline"
                   >
                     Home
-                  </button>
-                  <span>/</span>
-                  <span className="hover:text-[#962949] transition-colors">
-                    {selectedProduct?.collection || 'Boota Luxe'}
-                  </span>
-                  <span>/</span>
-                  <span className="text-[#2B2224] font-medium">
+                  </a>
+                  <span className="text-[#A09598]">/</span>
+                  <a
+                    href={`#${(selectedProduct?.collection || 'collection').toLowerCase().replace(/\s+/g, '-')}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const col = (selectedProduct?.collection || '').toLowerCase();
+                      if (col.includes('desi')) {
+                        setCollectionFilter('desi');
+                        setCurrentView('collection');
+                      } else if (col.includes('play')) {
+                        setCollectionFilter('play');
+                        setCurrentView('collection');
+                      } else if (col.includes('luxe')) {
+                        setCollectionFilter('luxe');
+                        setCurrentView('collection');
+                      } else if (selectedProduct?.category?.toLowerCase().includes('accessor')) {
+                        setCurrentView('accessories');
+                      } else {
+                        setCurrentView('girl');
+                      }
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="hover:text-[#962949] transition-colors cursor-pointer hover:underline text-[#6F6265]"
+                    title={`View ${selectedProduct?.collection || 'collection'} styles`}
+                  >
+                    {selectedProduct?.collection || 'Boota Collection'}
+                  </a>
+                  <span className="text-[#A09598]">/</span>
+                  <span className="text-[#2B2224] font-medium truncate max-w-[260px] sm:max-w-none">
                     {selectedProduct?.name || 'Gulnar Silk Lehenga Set'}
                   </span>
                 </nav>
-
-                <div className="flex items-center space-x-3">
-                  <button
-                    type="button"
-                    onClick={() => setAdminSettingsOpen(true)}
-                    className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-[4px] border border-[#E8DADD] bg-white hover:bg-[#FAF6F4] text-[12px] font-semibold text-[#962949] transition-colors cursor-pointer shadow-2xs"
-                    title="Store Admin: Edit Return Window & Best Paired With Products"
-                  >
-                    <Settings className="w-3.5 h-3.5" />
-                    <span>Store Admin</span>
-                  </button>
-
-                  <button
-                    onClick={() => setCurrentView('home')}
-                    className="inline-flex items-center space-x-1.5 text-[12.5px] font-semibold uppercase tracking-[0.06em] text-[#962949] hover:text-[#80223d] transition-colors cursor-pointer"
-                  >
-                    <ArrowLeft className="w-4 h-4 stroke-[2]" />
-                    <span>Back to Home</span>
-                  </button>
-                </div>
               </div>
             </div>
 
@@ -792,7 +844,10 @@ export default function App() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
                 {/* Left: Minimum 6 images gallery with hover zoom & lightbox */}
                 <div className="lg:col-span-7">
-                  <ProductGallery product={selectedProduct} />
+                  <ProductGallery
+                    product={selectedProduct}
+                    onShare={() => setProductShareOpen(true)}
+                  />
                 </div>
 
                 {/* Right: Sticky product information & purchase details */}
@@ -810,6 +865,8 @@ export default function App() {
                     onOpenReviews={() => setReviewsOpen(true)}
                     onOpenReturnsPolicy={() => handleNavigatePage('returns')}
                     returnDays={returnDays}
+                    onShowToast={showToast}
+                    onOpenShare={() => setProductShareOpen(true)}
                   />
                 </div>
               </div>
@@ -864,6 +921,34 @@ export default function App() {
         onRemoveItem={handleRemoveItem}
       />
 
+      {/* Interactive Wishlist Drawer */}
+      <WishlistDrawer
+        isOpen={wishlistOpen}
+        onClose={() => setWishlistOpen(false)}
+        products={resolvedWishlistProducts}
+        onRemoveItem={handleToggleWishlist}
+        onAddToCart={(prod, size, color) => {
+          handleAddToBag(size, color, prod);
+          showToast(`Added ${prod.name} to bag`);
+        }}
+        onSelectProduct={handleSelectProduct}
+        onOpenAccountWishlist={() => {
+          setAccountInitialTab('wishlist');
+          setDashboardOpen(true);
+        }}
+        onExploreCollections={() => {
+          handleNavigatePage('girl');
+        }}
+      />
+
+      {/* Product Share Modal */}
+      <ProductShareModal
+        isOpen={productShareOpen}
+        onClose={() => setProductShareOpen(false)}
+        product={selectedProduct}
+        onShowToast={showToast}
+      />
+
       <ReviewsModal
         isOpen={reviewsOpen}
         onClose={() => setReviewsOpen(false)}
@@ -909,9 +994,11 @@ export default function App() {
           setReturnModalOpen(true);
         }}
         onCancelOrder={handleCancelOrder}
-        wishlistProducts={allProducts.filter((p) => wishlistIds.includes(p.id))}
+        wishlistProducts={resolvedWishlistProducts}
         onRemoveWishlist={handleToggleWishlist}
         onAddToCart={(prod, size, color) => handleAddToBag(size, color, prod)}
+        initialTab={accountInitialTab}
+        onSelectProduct={handleSelectProduct}
       />
 
       {/* Auth Modal (Mobile OTP primary, Email/Password, Guest) */}

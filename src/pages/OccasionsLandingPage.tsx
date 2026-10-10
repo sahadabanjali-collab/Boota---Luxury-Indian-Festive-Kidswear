@@ -31,7 +31,7 @@ interface OccasionsLandingPageProps {
 // ============================================================================
 // 1. Ganesh Chaturthi Products (matching video 00:00 - 00:02)
 // ============================================================================
-const ganeshChaturthiProducts: Product[] = [
+export const ganeshChaturthiProducts: Product[] = [
   {
     id: 'ganpati-dhoti-kurta-set',
     name: 'Ganpati Dhoti Kurta Set',
@@ -213,7 +213,7 @@ const ganeshChaturthiProducts: Product[] = [
 // ============================================================================
 // 2. Navratri & Durga Puja Products (matching video 00:03 - 00:05)
 // ============================================================================
-const navratriProducts: Product[] = [
+export const navratriProducts: Product[] = [
   {
     id: 'devi-durga-coord-cream',
     name: 'Devi Durga Co-ord Set - Cream',
@@ -395,7 +395,7 @@ const navratriProducts: Product[] = [
 // ============================================================================
 // 3. Dussehra & Diwali Products (matching video 00:06 - 00:09)
 // ============================================================================
-const dussehraDiwaliProducts: Product[] = [
+export const dussehraDiwaliProducts: Product[] = [
   {
     id: 'hanuman-blessing-kurta-yellow',
     name: 'Hanuman Blessing Kurta Pyjama - Yellow',
@@ -577,7 +577,7 @@ const dussehraDiwaliProducts: Product[] = [
 // ============================================================================
 // 4. Baby Ceremonies Products (Milestones, Naming, Annaprashan & Mundan)
 // ============================================================================
-const babyCeremoniesProducts: Product[] = [
+export const babyCeremoniesProducts: Product[] = [
   {
     id: 'annaprashan-angrakha-yellow',
     name: 'Annaprashan First Food Angrakha Set',
@@ -861,7 +861,7 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
 
       {/* Circular Quick Occasion Bubbles Row */}
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-4 mb-6">
-        <div className="flex items-center justify-center gap-5 sm:gap-8 md:gap-11 overflow-x-auto pb-2 no-scrollbar">
+        <div className="flex items-center justify-start sm:justify-center gap-5 sm:gap-8 md:gap-11 overflow-x-auto pb-2 no-scrollbar px-2">
           {occasionBubbles.map((bubble) => {
             const isSelected = selectedFilter === bubble.id;
             return (
@@ -869,13 +869,13 @@ export const OccasionsLandingPage: React.FC<OccasionsLandingPageProps> = ({
                 key={bubble.id}
                 type="button"
                 onClick={() => handleBubbleClick(bubble.id)}
-                className="flex flex-col items-center group cursor-pointer shrink-0 focus:outline-hidden"
+                className="flex flex-col items-center group cursor-pointer shrink-0 focus:outline-hidden transition-transform duration-200 active:scale-95"
               >
                 {/* Circular Image with active ring */}
                 <div
-                  className={`w-18 h-18 sm:w-22 sm:h-22 md:w-24 md:h-24 rounded-full overflow-hidden border-2 transition-all duration-200 p-0.5 ${
+                  className={`w-18 h-18 sm:w-22 sm:h-22 md:w-24 md:h-24 rounded-full overflow-hidden border-2 bg-white transition-all duration-200 p-0.5 shadow-2xs ${
                     isSelected
-                      ? 'border-[#962949] ring-2 ring-[#962949]/20 scale-105 shadow-sm'
+                      ? 'border-[#962949] ring-2 ring-[#962949]/30 scale-105 shadow-sm'
                       : 'border-[#E8DADD] hover:border-[#962949]/60'
                   }`}
                 >

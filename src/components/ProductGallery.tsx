@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Share2 } from 'lucide-react';
 import { Product } from '../types';
 import { getProductGalleryImages } from '../data/products';
 
 interface ProductGalleryProps {
   product?: Product | null;
+  onShare?: () => void;
 }
 
 interface ZoomState {
@@ -13,7 +14,7 @@ interface ZoomState {
   y: number;
 }
 
-export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
+export const ProductGallery: React.FC<ProductGalleryProps> = ({ product, onShare }) => {
   const images = getProductGalleryImages(product);
 
   // Lightbox Modal state
@@ -141,6 +142,17 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ product }) => {
             </div>
 
             <div className="flex items-center space-x-2">
+              {onShare && (
+                <button
+                  type="button"
+                  onClick={onShare}
+                  className="p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+                  title="Share Outfit"
+                  aria-label="Share Outfit"
+                >
+                  <Share2 className="w-5 h-5" />
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => setModalZoomed((prev) => !prev)}

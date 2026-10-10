@@ -41,6 +41,8 @@ interface AccountDashboardProps {
   wishlistProducts: Product[];
   onRemoveWishlist: (productId: string) => void;
   onAddToCart: (product: Product, size: string, color: string) => void;
+  initialTab?: 'orders' | 'returns' | 'profile' | 'addresses' | 'wishlist' | 'comms' | 'delete';
+  onSelectProduct?: (product: Product) => void;
 }
 
 export const AccountDashboard: React.FC<AccountDashboardProps> = ({
@@ -57,10 +59,18 @@ export const AccountDashboard: React.FC<AccountDashboardProps> = ({
   wishlistProducts,
   onRemoveWishlist,
   onAddToCart,
+  initialTab,
+  onSelectProduct,
 }) => {
   const [activeTab, setActiveTab] = useState<
     'orders' | 'returns' | 'profile' | 'addresses' | 'wishlist' | 'comms' | 'delete'
-  >('orders');
+  >(initialTab || 'orders');
+
+  React.useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab, isOpen]);
 
   // Profile Edit State
   const [profileForm, setProfileForm] = useState({
@@ -969,62 +979,158 @@ export const AccountDashboard: React.FC<AccountDashboardProps> = ({
             {/* TAB 5: WISHLIST */}
             {activeTab === 'wishlist' && (
               <div className="space-y-6">
-                <div className="pb-3 border-b border-[#E8DADD]">
-                  <h3 className="font-serif text-[24px] font-semibold text-[#2B2224]">
-                    Saved Wishlist ({wishlistProducts.length})
-                  </h3>
-                  <p className="text-[13px] text-[#6F6265]">
-                    Handpicked celebratory pieces saved for upcoming milestones.
-                  </p>
+                <div className="pb-3 border-b border-[#E8DADD] flex items-center justify-between flex-wrap gap-2">
+                  <div>
+                    <h3 className="font-serif text-[24px] font-semibold text-[#2B2224]">
+                      Saved Wishlist ({wishlistProducts.length})
+                    </h3>
+                    <p className="text-[13px] text-[#6F6265]">
+                      Handpicked celebratory pieces saved for upcoming milestones.
+                    </p>
+                  </div>
+                  {wishlistProducts.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        wishlistProducts.forEach((p) => {
+                          const size = p.sizes?.[0] || '1-2 Y';
+                          const color = p.color || 'Pink';
+                          onAddToCart(p, size, color);
+                        });
+                      }}
+                      className="px-3.5 py-1.5 bg-[#962949] hover:bg-[#7D223C] text-white text-[12px] font-semibold uppercase tracking-wider rounded-[4px] shadow-2xs transition-colors cursor-pointer"
+                    >
+                      Move All to Bag
+                    </button>
+                  )}
                 </div>
 
                 {wishlistProducts.length === 0 ? (
-                  <div className="text-center py-12 bg-[#FAF6F4] rounded-[6px] border border-[#E8DADD] p-6 space-y-3">
-                    <Heart className="w-10 h-10 text-[#A09598] mx-auto stroke-[1.5]" />
-                    <h4 className="font-serif text-[18px] text-[#2B2224] font-semibold">
-                      Your Wishlist is Empty
-                    </h4>
-                    <p className="text-[13px] text-[#6F6265] max-w-sm mx-auto">
-                      Explore our handcrafted collections and click the heart icon on any outfit to save it here.
-                    </p>
+                  <div className="text-center py-12 bg-[#FAF6F4] rounded-[6px] border border-[#E8DADD] p-6 space-y-4">
+                    <div className="w-14 h-14 rounded-full bg-white border border-[#E8DADD] flex items-center justify-center mx-auto text-[#962949] shadow-2xs">
+                      <Heart className="w-7 h-7 text-[#962949] stroke-[1.5]" />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-serif text-[19px] text-[#2B2224] font-semibold">
+                        Your Wishlist is Empty
+                      </h4>
+                      <p className="text-[13px] text-[#6F6265] max-w-sm mx-auto">
+                        Explore our handcrafted collections and click the heart icon on any outfit to save it here.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="inline-flex items-center gap-1.5 px-5 py-2 bg-[#962949] hover:bg-[#7D223C] text-white text-[12px] font-semibold uppercase tracking-wider rounded-[4px] transition-colors cursor-pointer shadow-2xs"
+                    >
+                      <span>Explore Festive Collections</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {wishlistProducts.map((prod) => (
-                      <div
-                        key={prod.id}
-                        className="border border-[#E8DADD] rounded-[6px] overflow-hidden bg-[#FFFDF9] flex flex-col justify-between"
-                      >
-                        <div className="relative aspect-[3/4] overflow-hidden">
-                          <img
-                            src={prod.image}
-                            alt={prod.name}
-                            className="w-full h-full object-cover"
-                          />
-                          <button
-                            onClick={() => onRemoveWishlist(prod.id)}
-                            className="absolute top-2 right-2 p-1.5 bg-white/80 hover:bg-white text-[#B71C1C] rounded-full shadow-xs cursor-pointer"
-                            aria-label="Remove item"
+                    {wishlistProducts.map((prod) => {
+                      const defaultSize = prod.sizes?.[0] || '1-2 Y';
+                      const defaultColor = prod.color || 'Pink';
+
+                      return (
+                        <div
+                          key={prod.id}
+                          className="border border-[#E8DADD] rounded-[6px] overflow-hidden bg-[#FFFDF9] flex flex-col justify-between hover:border-[#962949]/40 transition-colors shadow-2xs group"
+                        >
+                          <div
+                            onClick={() => {
+                              if (onSelectProduct) {
+                                onSelectProduct(prod);
+                                onClose();
+                              }
+                            }}
+                            className="relative aspect-[3/4] overflow-hidden cursor-pointer"
                           >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                            <img
+                              src={prod.image}
+                              alt={prod.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                            {prod.badge && (
+                              <span className="absolute bottom-2 left-2 px-1.5 py-0.5 bg-[#962949] text-white text-[9.5px] font-bold rounded-[2px] leading-none uppercase">
+                                {prod.badge}
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onRemoveWishlist(prod.id);
+                              }}
+                              className="absolute top-2 right-2 p-1.5 bg-white/90 hover:bg-white text-[#B71C1C] rounded-full shadow-xs cursor-pointer transition-colors"
+                              aria-label="Remove item"
+                              title="Remove from wishlist"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+
+                          <div className="p-3.5 flex flex-col justify-between flex-1 gap-2.5">
+                            <div>
+                              <span className="text-[11px] text-[#6F6265] block uppercase tracking-wider font-semibold">
+                                {prod.collection || 'Festive Edit'}
+                              </span>
+                              <h5
+                                onClick={() => {
+                                  if (onSelectProduct) {
+                                    onSelectProduct(prod);
+                                    onClose();
+                                  }
+                                }}
+                                className="font-semibold text-[#2B2224] hover:text-[#962949] text-[13.5px] leading-snug cursor-pointer line-clamp-1 transition-colors mt-0.5"
+                                title={prod.name}
+                              >
+                                {prod.name}
+                              </h5>
+                              <div className="flex items-baseline gap-2 mt-1">
+                                <span className="text-[#962949] font-serif font-bold text-[16px]">
+                                  ₹{prod.price.toLocaleString('en-IN')}
+                                </span>
+                                {prod.mrp && prod.mrp > prod.price && (
+                                  <span className="text-[12px] text-[#A09598] line-through">
+                                    ₹{prod.mrp.toLocaleString('en-IN')}
+                                  </span>
+                                )}
+                                {prod.discountPercent ? (
+                                  <span className="text-[10px] font-bold text-[#962949] bg-[#962949]/10 px-1 py-0.5 rounded-[2px]">
+                                    {prod.discountPercent}% OFF
+                                  </span>
+                                ) : null}
+                              </div>
+                            </div>
+
+                            <div className="pt-2 border-t border-[#E8DADD]/50 flex items-center gap-2">
+                              {onSelectProduct && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    onSelectProduct(prod);
+                                    onClose();
+                                  }}
+                                  className="py-2 px-2.5 border border-[#E8DADD] hover:border-[#962949] text-[#2B2224] hover:text-[#962949] text-[11.5px] font-semibold rounded-[4px] transition-colors cursor-pointer"
+                                  title="View product details"
+                                >
+                                  View
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => onAddToCart(prod, defaultSize, defaultColor)}
+                                className="flex-1 py-2 bg-[#962949] hover:bg-[#7D223C] text-white text-[12px] font-semibold tracking-wider uppercase rounded-[4px] transition-colors cursor-pointer text-center"
+                              >
+                                Move to Bag
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                        <div className="p-4 space-y-2">
-                          <h5 className="font-semibold text-[#2B2224] text-[14px] truncate">
-                            {prod.name}
-                          </h5>
-                          <p className="text-[#962949] font-serif font-bold text-[16px]">
-                            ₹{prod.price}
-                          </p>
-                          <button
-                            onClick={() => onAddToCart(prod, '4-5 Y', prod.color || 'Rani Pink')}
-                            className="w-full py-2 bg-[#962949] hover:bg-[#7D223C] text-white text-[12px] font-semibold tracking-wide uppercase rounded-[4px] transition-colors cursor-pointer"
-                          >
-                            Move to Bag
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>

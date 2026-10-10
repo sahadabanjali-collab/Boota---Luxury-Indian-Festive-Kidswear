@@ -32,7 +32,7 @@ interface CollectionsLandingPageProps {
 }
 
 // 1. Boota Desi Products
-const bootaDesiProducts: Product[] = [
+export const bootaDesiProducts: Product[] = [
   {
     id: 'gulmohar-kurta-pyjama',
     name: 'Gulmohar Kurta Pyjama Set',
@@ -212,7 +212,7 @@ const bootaDesiProducts: Product[] = [
 ];
 
 // 2. Boota Play Products
-const bootaPlayProducts: Product[] = [
+export const bootaPlayProducts: Product[] = [
   {
     id: 'candy-stripe-peplum',
     name: 'Candy Stripe Peplum Set',
@@ -392,7 +392,7 @@ const bootaPlayProducts: Product[] = [
 ];
 
 // 3. Boota Luxe Products
-const bootaLuxeProducts: Product[] = [
+export const bootaLuxeProducts: Product[] = [
   {
     id: 'gulnar-silk-lehenga-luxe',
     name: 'Gulnar Silk Lehenga Set',
@@ -672,7 +672,7 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
 
       {/* Circular Collection Bubbles Row matching video: DESI, PLAY, LUXE */}
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-4 mb-8">
-        <div className="flex items-center justify-center gap-6 sm:gap-10 md:gap-14 overflow-x-auto pb-2 no-scrollbar">
+        <div className="flex items-center justify-start sm:justify-center gap-6 sm:gap-10 md:gap-14 overflow-x-auto pb-2 no-scrollbar px-2">
           {collectionBubbles.map((bubble) => {
             const isSelected = selectedFilter === bubble.id;
             return (
@@ -680,13 +680,13 @@ export const CollectionsLandingPage: React.FC<CollectionsLandingPageProps> = ({
                 key={bubble.id}
                 type="button"
                 onClick={() => handleBubbleClick(bubble.id)}
-                className="flex flex-col items-center group cursor-pointer shrink-0 focus:outline-hidden"
+                className="flex flex-col items-center group cursor-pointer shrink-0 focus:outline-hidden transition-transform duration-200 active:scale-95"
               >
                 {/* Circular Image with active ring */}
                 <div
-                  className={`w-18 h-18 sm:w-22 sm:h-22 md:w-24 md:h-24 rounded-full overflow-hidden border-2 transition-all duration-200 p-0.5 ${
+                  className={`w-18 h-18 sm:w-22 sm:h-22 md:w-24 md:h-24 rounded-full overflow-hidden border-2 bg-white transition-all duration-200 p-0.5 shadow-2xs ${
                     isSelected
-                      ? 'border-[#962949] ring-2 ring-[#962949]/20 scale-105 shadow-sm'
+                      ? 'border-[#962949] ring-2 ring-[#962949]/30 scale-105 shadow-sm'
                       : 'border-[#E8DADD] hover:border-[#962949]/60'
                   }`}
                 >

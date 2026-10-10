@@ -177,11 +177,11 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Search */}
           <button
             onClick={onOpenSearch}
-            className="p-1 hover:text-[#962949] transition-colors cursor-pointer rounded-full"
+            className="p-1.5 hover:text-[#962949] hover:bg-[#F9D0D6]/35 active:scale-95 transition-all duration-200 cursor-pointer rounded-full flex items-center justify-center group focus:outline-none focus:ring-2 focus:ring-[#962949]/30"
             aria-label="Search collection"
-            title="Search"
+            title="Search Boota Collection"
           >
-            <Search className="w-5 h-5 stroke-[1.8]" />
+            <Search className="w-5 h-5 stroke-[1.8] group-hover:scale-110 transition-transform duration-200" />
           </button>
 
           {/* User / My Account Icon */}

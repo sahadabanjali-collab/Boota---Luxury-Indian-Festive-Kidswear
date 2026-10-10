@@ -430,6 +430,162 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
+  const handleSelectCategory = (cat: string) => {
+    const lower = cat.toLowerCase().trim();
+    if (lower === 'girl' || lower === 'girls') {
+      handleNavigatePage('girl');
+      return;
+    }
+    if (lower === '0-12m' || lower.includes('0-12') || lower.includes('baby (0-12')) {
+      setGirlAge('0-12M');
+      handleNavigatePage('girl');
+      return;
+    }
+    if (lower === '1-3y' || lower.includes('1-3') || lower.includes('toddler (1-3')) {
+      setGirlAge('1-3Y');
+      handleNavigatePage('girl');
+      return;
+    }
+    if (lower === '3y+' || lower.includes('3+') || lower.includes('kids (3+')) {
+      setGirlAge('3Y+');
+      handleNavigatePage('girl');
+      return;
+    }
+    if (lower === 'collection' || lower === 'collections') {
+      setCollectionFilter('all');
+      handleNavigatePage('collection');
+      return;
+    }
+    if (lower.includes('desi')) {
+      setCollectionFilter('desi');
+      handleNavigatePage('collection');
+      return;
+    }
+    if (lower.includes('play')) {
+      setCollectionFilter('play');
+      handleNavigatePage('collection');
+      return;
+    }
+    if (lower.includes('luxe')) {
+      setCollectionFilter('luxe');
+      handleNavigatePage('collection');
+      return;
+    }
+    if (
+      lower === 'accessories' ||
+      lower === 'accessory' ||
+      lower.includes('swaddle') ||
+      lower.includes('pillow') ||
+      lower.includes('toy') ||
+      lower.includes('hair') ||
+      lower.includes('bangle') ||
+      lower.includes('jewel') ||
+      lower.includes('bag')
+    ) {
+      handleNavigatePage('accessories');
+      return;
+    }
+    if (lower === 'occasions' || lower === 'occasion') {
+      setOccasionFilter('all');
+      handleNavigatePage('occasions');
+      return;
+    }
+    if (lower.includes('ganesh') || lower.includes('ganpati')) {
+      setOccasionFilter('ganesh-chaturthi');
+      handleNavigatePage('occasions');
+      return;
+    }
+    if (lower.includes('navratri') || lower.includes('durga')) {
+      setOccasionFilter('navratri');
+      handleNavigatePage('occasions');
+      return;
+    }
+    if (lower.includes('diwali') || lower.includes('dussehra')) {
+      setOccasionFilter('diwali');
+      handleNavigatePage('occasions');
+      return;
+    }
+    if (
+      lower.includes('baby welcome') ||
+      lower.includes('mundan') ||
+      lower.includes('annaprashan') ||
+      lower.includes('baby ceremonies')
+    ) {
+      setOccasionFilter('baby-ceremonies');
+      handleNavigatePage('occasions');
+      return;
+    }
+    if (
+      lower.includes('wedding') ||
+      lower.includes('mehendi') ||
+      lower.includes('haldi') ||
+      lower.includes('sangeet')
+    ) {
+      setOccasionFilter('wedding');
+      handleNavigatePage('occasions');
+      return;
+    }
+    if (lower === 'sale' || lower === 'all sale') {
+      setSaleFilter('all');
+      handleNavigatePage('sale');
+      return;
+    }
+    if (lower.includes('sale') && lower.includes('desi')) {
+      setSaleFilter('desi');
+      handleNavigatePage('sale');
+      return;
+    }
+    if (lower.includes('sale') && lower.includes('play')) {
+      setSaleFilter('play');
+      handleNavigatePage('sale');
+      return;
+    }
+    if (lower.includes('sale') && lower.includes('luxe')) {
+      setSaleFilter('luxe');
+      handleNavigatePage('sale');
+      return;
+    }
+    if (
+      lower.includes('special offer') ||
+      lower.includes('special prices') ||
+      lower.includes('last chance') ||
+      lower.includes('first time on sale') ||
+      lower.includes('special')
+    ) {
+      setSaleFilter('special');
+      handleNavigatePage('sale');
+      return;
+    }
+    if (
+      lower.includes('suit') ||
+      lower.includes('lehenga') ||
+      lower.includes('sharara') ||
+      lower.includes('dress') ||
+      lower.includes('kurti') ||
+      lower.includes('top') ||
+      lower.includes('anarkali')
+    ) {
+      handleNavigatePage('girl');
+      return;
+    }
+    const match =
+      findStoreProductById(lower) ||
+      allProducts.find(
+        (p) =>
+          p.name.toLowerCase().includes(lower) ||
+          p.category.toLowerCase().includes(lower) ||
+          p.collection.toLowerCase().includes(lower)
+      );
+    if (match) {
+      setSelectedProduct(match);
+      setCurrentView('pdp');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast(`Viewing ${match?.name}`);
+      return;
+    }
+    handleNavigatePage('girl');
+  };
+
   const totalCartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
@@ -454,159 +610,7 @@ export default function App() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         onNavigatePage={handleNavigatePage}
-        onSelectCategory={(cat) => {
-          const lower = cat.toLowerCase().trim();
-          if (lower === 'girl' || lower === 'girls') {
-            handleNavigatePage('girl');
-            return;
-          }
-          if (lower === '0-12m' || lower.includes('0-12') || lower.includes('baby (0-12')) {
-            setGirlAge('0-12M');
-            handleNavigatePage('girl');
-            return;
-          }
-          if (lower === '1-3y' || lower.includes('1-3') || lower.includes('toddler (1-3')) {
-            setGirlAge('1-3Y');
-            handleNavigatePage('girl');
-            return;
-          }
-          if (lower === '3y+' || lower.includes('3+') || lower.includes('kids (3+')) {
-            setGirlAge('3Y+');
-            handleNavigatePage('girl');
-            return;
-          }
-          if (lower === 'collection' || lower === 'collections') {
-            setCollectionFilter('all');
-            handleNavigatePage('collection');
-            return;
-          }
-          if (lower.includes('desi')) {
-            setCollectionFilter('desi');
-            handleNavigatePage('collection');
-            return;
-          }
-          if (lower.includes('play')) {
-            setCollectionFilter('play');
-            handleNavigatePage('collection');
-            return;
-          }
-          if (lower.includes('luxe')) {
-            setCollectionFilter('luxe');
-            handleNavigatePage('collection');
-            return;
-          }
-          if (
-            lower === 'accessories' ||
-            lower === 'accessory' ||
-            lower.includes('swaddle') ||
-            lower.includes('pillow') ||
-            lower.includes('toy') ||
-            lower.includes('hair') ||
-            lower.includes('bangle') ||
-            lower.includes('jewel') ||
-            lower.includes('bag')
-          ) {
-            handleNavigatePage('accessories');
-            return;
-          }
-          if (lower === 'occasions' || lower === 'occasion') {
-            setOccasionFilter('all');
-            handleNavigatePage('occasions');
-            return;
-          }
-          if (lower.includes('ganesh') || lower.includes('ganpati')) {
-            setOccasionFilter('ganesh-chaturthi');
-            handleNavigatePage('occasions');
-            return;
-          }
-          if (lower.includes('navratri') || lower.includes('durga')) {
-            setOccasionFilter('navratri');
-            handleNavigatePage('occasions');
-            return;
-          }
-          if (lower.includes('diwali') || lower.includes('dussehra')) {
-            setOccasionFilter('diwali');
-            handleNavigatePage('occasions');
-            return;
-          }
-          if (
-            lower.includes('baby welcome') ||
-            lower.includes('mundan') ||
-            lower.includes('annaprashan') ||
-            lower.includes('baby ceremonies')
-          ) {
-            setOccasionFilter('baby-ceremonies');
-            handleNavigatePage('occasions');
-            return;
-          }
-          if (
-            lower.includes('wedding') ||
-            lower.includes('mehendi') ||
-            lower.includes('haldi') ||
-            lower.includes('sangeet')
-          ) {
-            setOccasionFilter('wedding');
-            handleNavigatePage('occasions');
-            return;
-          }
-          if (lower === 'sale' || lower === 'all sale') {
-            setSaleFilter('all');
-            handleNavigatePage('sale');
-            return;
-          }
-          if (lower.includes('sale') && lower.includes('desi')) {
-            setSaleFilter('desi');
-            handleNavigatePage('sale');
-            return;
-          }
-          if (lower.includes('sale') && lower.includes('play')) {
-            setSaleFilter('play');
-            handleNavigatePage('sale');
-            return;
-          }
-          if (lower.includes('sale') && lower.includes('luxe')) {
-            setSaleFilter('luxe');
-            handleNavigatePage('sale');
-            return;
-          }
-          if (
-            lower.includes('special offer') ||
-            lower.includes('special prices') ||
-            lower.includes('last chance') ||
-            lower.includes('first time on sale') ||
-            lower.includes('special')
-          ) {
-            setSaleFilter('special');
-            handleNavigatePage('sale');
-            return;
-          }
-          if (
-            lower.includes('suit') ||
-            lower.includes('lehenga') ||
-            lower.includes('sharara') ||
-            lower.includes('dress') ||
-            lower.includes('kurti') ||
-            lower.includes('top') ||
-            lower.includes('anarkali')
-          ) {
-            handleNavigatePage('girl');
-            return;
-          }
-          const match = allProducts.find(
-            (p) =>
-              p.name.toLowerCase().includes(lower) ||
-              p.category.toLowerCase().includes(lower) ||
-              p.collection.toLowerCase().includes(lower)
-          );
-          if (match) {
-            setSelectedProduct(match);
-            setCurrentView('pdp');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            showToast(`Viewing ${match?.name}`);
-            return;
-          }
-          handleNavigatePage('girl');
-        }}
+        onSelectCategory={handleSelectCategory}
       />
 
       {/* Main View Router */}
@@ -957,15 +961,33 @@ export default function App() {
       <SearchModal
         isOpen={searchOpen}
         onClose={() => setSearchOpen(false)}
+        onSelectProduct={(prod) => {
+          handleSelectProduct(prod);
+          setSearchOpen(false);
+          showToast(`Viewing ${prod.name}`);
+        }}
         onSelectItem={(productName: string) => {
-          const match = allProducts.find((p) =>
-            p.name.toLowerCase().includes(productName.toLowerCase())
-          );
+          const match =
+            findStoreProductById(productName) ||
+            allProducts.find((p) =>
+              p.name.toLowerCase().includes(productName.toLowerCase())
+            );
           if (match) {
             handleSelectProduct(match);
+            showToast(`Viewing ${match.name}`);
           }
           setSearchOpen(false);
         }}
+        onNavigateCategory={(categoryOrPage) => {
+          handleSelectCategory(categoryOrPage);
+          setSearchOpen(false);
+        }}
+        onAddToCart={(product, size) => {
+          handleAddToBag(size || product.sizes[0] || '1-2 Y', product.color, product);
+          showToast(`Added ${product.name} to bag`);
+        }}
+        onToggleWishlist={handleToggleWishlist}
+        wishlistIds={wishlistIds}
       />
 
       {/* Sizing Pop-up Modal for Clothes */}
